@@ -60,7 +60,7 @@ struct AuthenticatedView<Content, Unauthenticated>: View where Content: View, Un
         AuthenticationView()
           .environmentObject(viewModel)
       }
-    case .authenticated:
+    case .authenticated: 
       VStack {
         content()
           .environmentObject(viewModel)

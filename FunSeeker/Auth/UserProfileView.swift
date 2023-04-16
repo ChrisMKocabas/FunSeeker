@@ -125,7 +125,7 @@ struct UserProfileView: View {
           .animation(.spring(response:0.55, dampingFraction: 0.7,
                             blendDuration: 0), value: showNewScreen)
           .offset(y: showNewScreen ? 0 : UIScreen.main.bounds.height)
-      }
+      } 
     }
     .navigationTitle("Profile")
     .navigationBarTitleDisplayMode(.inline)
