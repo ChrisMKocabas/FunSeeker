@@ -164,7 +164,7 @@ extension AuthenticationViewModel {
         let userUid = user?.uid.description
         let db = Firestore.firestore()
         try await db.collection("users").document(userUid!).delete()
-        try await user?.delete()
+        try await user?.delete() 
         
       return true
     }
