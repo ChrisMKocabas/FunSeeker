@@ -46,7 +46,7 @@ struct LoginView: View {
 
   var body: some View {
     VStack {
-      SwiftUI.Image("Login")
+      Image("Login")
         .resizable()
         .aspectRatio(contentMode: .fit)
         .frame(minHeight: 300, maxHeight: 400)

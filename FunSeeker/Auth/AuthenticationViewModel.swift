@@ -10,7 +10,6 @@ import Firebase
 import FirebaseCore
 import FirebaseAnalyticsSwift
 import FirebaseAuth
-import FirebaseFirestore
 import Combine
 
 struct AuthDataResultModel {
@@ -187,24 +186,33 @@ extension AuthenticationViewModel {
     }
   }
 
-  func updatePassword(password:String) async {
+  func updatePassword(password:String, newPassword:String) async -> String {
 
     do {
       guard let user = Auth.auth().currentUser else { throw URLError(.badServerResponse)}
-      try await user.updatePassword(to: password)
+      let credential = EmailAuthProvider.credential(withEmail: user.email ?? "", password: password)
+      try await user.reauthenticate(with: credential)
+      try await user.updatePassword(to: newPassword)
+      return ("Password updated successfully!")
     } catch {
       errorMessage = error.localizedDescription
+      return(errorMessage)
     }
 
   }
 
-  func updateEmail(email:String) async {
+  func updateEmail(email:String, password: String) async -> String {
 
     do {
       guard let user = Auth.auth().currentUser else { throw URLError(.badServerResponse)}
-      try await user.updatePassword(to: email)
+      let credential = EmailAuthProvider.credential(withEmail: user.email ?? "", password: password)
+      try await user.reauthenticate(with: credential)
+      try await user.updateEmail(to: email)
+      displayName = user.email ?? ""
+      return ("Email updated successfully!")
     } catch {
       errorMessage = error.localizedDescription
+      return(errorMessage)
     }
 
   }
