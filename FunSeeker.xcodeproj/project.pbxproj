@@ -283,6 +283,7 @@
 			mainGroup = 0468B21D29E37EA20021E8C5;
 			packageReferences = (
 				0468B25C29E3A5270021E8C5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				041C076E29ED098600BA6219 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			productRefGroup = 0468B22729E37EA20021E8C5 /* Products */;
 			projectDirPath = "";
@@ -664,6 +665,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		041C076E29ED098600BA6219 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
 		0468B25C29E3A5270021E8C5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
