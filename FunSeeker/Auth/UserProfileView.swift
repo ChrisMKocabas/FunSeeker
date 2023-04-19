@@ -20,7 +20,8 @@ enum TransactionType {
 
 struct UserProfileView: View {
   @EnvironmentObject var viewModel: AuthenticationViewModel
-  @Environment(\.dismiss) var dismiss
+//  @Environment(\.dismiss) var dismiss
+  @Environment(\.presentationMode) var presentationMode
   @State var presentingConfirmationDialog = false
   @State var transactionStatus = TransactionType.blank
   @State var showNewScreen: Bool = false
@@ -28,7 +29,7 @@ struct UserProfileView: View {
   private func deleteAccount() {
     Task {
       if await viewModel.deleteAccount() == true {
-        dismiss()
+        presentationMode.wrappedValue.dismiss()
       }
     }
   }
@@ -145,7 +146,7 @@ struct UserProfileView_Previews: PreviewProvider {
 struct NewScreen: View {
 
     @EnvironmentObject var viewModel: AuthenticationViewModel
-    @Environment(\.presentationMode) var presentationMode
+//    @Environment(\.presentationMode) var presentationMode
     @Binding var showNewScreen: Bool
     @Binding var transactionStatus: TransactionType
     @State var email: String = ""

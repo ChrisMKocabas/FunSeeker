@@ -64,6 +64,7 @@ class AuthenticationViewModel: ObservableObject {
           : !(email.isEmpty || password.isEmpty || confirmPassword.isEmpty)
       }
       .assign(to: &$isValid)
+
   }
 
   private var authStateHandler: AuthStateDidChangeListenerHandle?

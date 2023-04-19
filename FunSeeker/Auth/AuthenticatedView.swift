@@ -64,17 +64,18 @@ struct AuthenticatedView<Content, Unauthenticated>: View where Content: View, Un
       VStack {
         content()
           .environmentObject(viewModel)
-        Text("You're logged in as \(viewModel.displayName).")
-        Button("Tap here to view your profile") {
-          presentingProfileScreen.presentingProfileScreen.toggle()
-        }
+          .environmentObject(presentingProfileScreen)
+//        Text("You're logged in as \(viewModel.displayName).")
+//        Button("Tap here to view your profile") {
+//          presentingProfileScreen.presentingProfileScreen.toggle()
+//        }
       }
-      .sheet(isPresented: $presentingProfileScreen.presentingProfileScreen) {
-        NavigationView {
-          UserProfileView()
-            .environmentObject(viewModel)
-        }
-      }
+//      .sheet(isPresented: $presentingProfileScreen.presentingProfileScreen) {
+//        NavigationView {
+//          UserProfileView()
+//            .environmentObject(viewModel)
+//        }
+//      }
     }
   }
 }

@@ -25,7 +25,6 @@ struct FunSeekerApp: App {
   @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
 
     let persistenceController = PersistenceController.shared
-
     var body: some Scene {
         WindowGroup {
           NavigationView{

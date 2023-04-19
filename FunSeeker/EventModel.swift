@@ -41,25 +41,26 @@ struct Event: Codable,Identifiable {
     let classifications: [Classification]
     let promoter: Promoter?
     let promoters: [Promoter]?
+    let info: String?
     let pleaseNote: String?
     let priceRanges: [PriceRange]?
+    let products: [Product]?
     let seatmap: Seatmap?
     let accessibility: Accessibility?
     let ticketLimit: TicketLimit?
     let ageRestrictions: AgeRestrictions?
     let ticketing: Ticketing?
-    let _links: EventLinks
-    let _embedded: EventEmbedded
     let outlets: [Outlet]?
-    let info: String?
-    let products: [Product]?
+    let links: EventLinks
+    let innerembedded: EventEmbedded
 
-//    enum CodingKeys: String, CodingKey {
-//        case name, type, id, test, url, locale, images, sales, dates, classifications, promoter, promoters, pleaseNote, priceRanges, seatmap, accessibility, ticketLimit, ageRestrictions, ticketing
-//        case links = "_links"
-//        case embedded = "_embedded"
-//        case outlets, info, products
-//    }
+
+    enum CodingKeys: String, CodingKey {
+        case name, type, id, test, url, locale, images, sales, dates, classifications, promoter, promoters, pleaseNote, priceRanges, seatmap, accessibility, ticketLimit, ageRestrictions, ticketing
+        case links = "_links"
+        case innerembedded = "_embedded"
+        case outlets, info, products
+    }
 }
 
 // MARK: - Accessibility
@@ -111,13 +112,13 @@ struct Start: Codable {
 
 // MARK: - Status
 struct Status: Codable {
-    let code: Code
+    let code: String
 }
 
-enum Code: String, Codable {
-    case offsale = "offsale"
-    case onsale = "onsale"
-}
+//enum Code: String, Codable {
+//    case offsale = "offsale"
+//    case onsale = "onsale"
+//}
 
 // MARK: - EventEmbedded
 struct EventEmbedded: Codable {
@@ -261,17 +262,17 @@ struct City: Codable {
 
 // MARK: - Country
 struct Country: Codable {
-    let name: CountryName
-    let countryCode: CountryCode
+    let name: String
+    let countryCode: String
 }
 
-enum CountryCode: String, Codable {
-    case ca = "CA"
-}
+//enum CountryCode: String, Codable {
+//    case ca = "CA"
+//}
 
-enum CountryName: String, Codable {
-    case canada = "Canada"
-}
+//enum CountryName: String, Codable {
+//    case canada = "Canada"
+//}
 
 // MARK: - DMA
 struct DMA: Codable {
@@ -338,18 +339,18 @@ struct Outlet: Codable {
 
 // MARK: - PriceRange
 struct PriceRange: Codable {
-    let type: PriceRangeType
-    let currency: Currency
+    let type: String
+    let currency: String
     let min, max: Double
 }
 
-enum Currency: String, Codable {
-    case cad = "CAD"
-}
+//enum Currency: String, Codable {
+//    case cad = "CAD"
+//}
 
-enum PriceRangeType: String, Codable {
-    case standard = "standard"
-}
+//enum PriceRangeType: String, Codable {
+//    case standard = "standard"
+//}
 
 // MARK: - Product
 struct Product: Codable {
@@ -465,15 +466,15 @@ class EventViewModel:ObservableObject {
   @Published var pageNo:String="1"
 
   init(){
-    Task{
-      await getData()
-    }
+      print("Initializing")
   }
 
   func getData() async{
     do{
       let data = try await fetchEvents()
-      let welcome = try JSONDecoder().decode(Welcome.self, from: data)
+      let decoder = JSONDecoder()
+      decoder.keyDecodingStrategy = .convertFromSnakeCase
+      let welcome = try decoder.decode(Welcome.self, from: data)
       DispatchQueue.main.async{
         self.events = welcome.embedded.events
       }
@@ -484,9 +485,10 @@ class EventViewModel:ObservableObject {
 
 
   func fetchEvents() async throws  -> Data{
-    let url = URL(string: "\(Constants.baseURL)\(countrycode)&page=\(pageNo)&size=20&apikey=\(Constants.API_KEY)")!
+    let url = URL(string: "\(Constants.baseURL)\(countrycode)&page=\(pageNo)&size=1&apikey=\(Constants.API_KEY)")!
     print(url)
         let (data, _) = try await URLSession.shared.data(from: url)
+    print("--> data: \(String(describing: String(data: data, encoding: .utf8)))")
         return data
   }
 
