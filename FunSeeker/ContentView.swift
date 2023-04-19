@@ -23,7 +23,7 @@ struct ContentView: View {
             ForEach(eventViewModel.events ) { item in
               NavigationLink {
                 Text("Item at \(item.dates.start.localDate)")
-              } label: { 
+              } label: {
                 Text(item.name)
               }
             }
@@ -41,7 +41,7 @@ struct ContentView: View {
           }
           Text("Select an item")
         }.onAppear(){
-          Task{
+          Task{ 
             print(eventViewModel.events)
           }
         }
