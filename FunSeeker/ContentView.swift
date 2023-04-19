@@ -18,12 +18,12 @@ struct ContentView: View {
     private var items: FetchedResults<Item>
 
     var body: some View {
-      NavigationView {  
+      NavigationView {
           List {
             ForEach(eventViewModel.events ) { item in
               NavigationLink {
                 Text("Item at \(item.dates.start.localDate)")
-              } label: {
+              } label: { 
                 Text(item.name)
               }
             }
