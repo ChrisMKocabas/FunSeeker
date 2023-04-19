@@ -26,7 +26,7 @@ struct ContentView: View {
               } label: {
                 Text(item.name)
               }
-            } 
+            }
             .onDelete(perform: deleteItems)
           }
           .toolbar {
@@ -41,7 +41,7 @@ struct ContentView: View {
           }
           Text("Select an item")
         }.onAppear(){
-          Task{
+          Task{ 
             print(eventViewModel.events)
           }
         }
