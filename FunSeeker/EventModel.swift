@@ -6,6 +6,7 @@
 //
  
 import Foundation
+import SwiftUI
 
 
 // MARK: - Welcome
@@ -28,15 +29,24 @@ struct Embedded: Codable {
 }
 
 // MARK: - Event
-struct Event: Codable,Identifiable {
+struct Event: Codable,Identifiable,Hashable {
+  static func == (lhs: Event, rhs: Event) -> Bool {
+    return lhs.id == rhs.id && lhs.name == rhs.name
+  }
+
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(id+name)
+  }
+
     let name: String
     let type: String
     let id: String
     let test: Bool
-    let url: String
+    let url: String?
     let locale: String?
     let images: [xImage]
-    let sales: Sales
+    let sales: Sales?
     let dates: Dates
     let classifications: [Classification]
     let promoter: Promoter?
@@ -52,7 +62,7 @@ struct Event: Codable,Identifiable {
     let ticketing: Ticketing?
     let outlets: [Outlet]?
     let links: EventLinks
-    let innerembedded: EventEmbedded
+    let innerembedded: EventEmbedded?
 
 
     enum CodingKeys: String, CodingKey {
@@ -77,7 +87,7 @@ struct AgeRestrictions: Codable {
 // MARK: - Classification
 struct Classification: Codable {
     let primary: Bool
-    let segment, genre, subGenre: Genre
+    let segment, genre, subGenre: Genre?
     let type, subType: Genre?
     let family: Bool
 }
@@ -98,7 +108,7 @@ struct Dates: Codable {
 
 // MARK: - End
 struct End: Codable {
-    let localDate: String
+    let localDate: String?
     let approximate, noSpecificTime: Bool
 }
 
@@ -123,7 +133,7 @@ struct Status: Codable {
 // MARK: - EventEmbedded
 struct EventEmbedded: Codable {
     let venues: [Venue]
-    let attractions: [Attraction]
+    let attractions: [Attraction]?
 }
 
 // MARK: - Attraction
@@ -132,7 +142,7 @@ struct Attraction: Codable {
     let type: AttractionType
     let id: String
     let test: Bool
-    let url: String
+    let url: String?
     let locale: String
     let externalLinks: ExternalLinks?
     let aliases: [String]?
@@ -167,7 +177,7 @@ struct Musicbrainz: Codable {
 
 // MARK: - Image
 struct xImage: Codable {
-    let ratio: Ratio
+    let ratio: Ratio?
     let url: String
     let width, height: Int
     let fallback: Bool
@@ -179,6 +189,7 @@ enum Ratio: String, Codable {
     case the16_9 = "16_9"
     case the3_2 = "3_2"
     case the4_3 = "4_3"
+    case the1_1 = "1_1"
 }
 
 // MARK: - AttractionLinks
@@ -192,7 +203,7 @@ struct AttractionLinks: Codable {
 
 // MARK: - First
 struct First: Codable {
-    let href: String
+    let href: String?
 }
 
 //enum Locale: String, Codable {
@@ -218,7 +229,7 @@ struct Venue: Codable {
     let state: xState
     let country: Country
     let address: Address
-    let location: Location
+    let location: Location?
     let markets: [Genre]?
     let dmas: [DMA]?
     let social: Social?
@@ -251,7 +262,7 @@ struct Address: Codable {
 // MARK: - BoxOfficeInfo
 struct BoxOfficeInfo: Codable {
     let phoneNumberDetail: String?
-    let openHoursDetail, acceptedPaymentDetail: String
+    let openHoursDetail, acceptedPaymentDetail: String?
     let willCallDetail: String?
 }
 
@@ -281,7 +292,7 @@ struct DMA: Codable {
 
 // MARK: - GeneralInfo
 struct GeneralInfo: Codable {
-    let generalRule: String
+    let generalRule: String?
     let childRule: String?
 }
 
@@ -309,7 +320,7 @@ struct xState: Codable {
 
 // MARK: - UpcomingEvents
 struct UpcomingEvents: Codable {
-    let total, ticketmaster, filtered: Int
+    let total, ticketmaster, filtered: Int?
     let tmr: Int?
 
     enum CodingKeys: String, CodingKey {
@@ -323,7 +334,7 @@ struct UpcomingEvents: Codable {
 // MARK: - EventLinks
 struct EventLinks: Codable {
     let linksSelf: First
-    let attractions, venues: [First]
+    let attractions, venues: [First]?
 
     enum CodingKeys: String, CodingKey {
         case linksSelf = "self"
@@ -333,7 +344,7 @@ struct EventLinks: Codable {
 
 // MARK: - Outlet
 struct Outlet: Codable {
-    let url: String
+    let url: String?
     let type: String
 }
 
@@ -462,8 +473,9 @@ class EventViewModel:ObservableObject {
   }
 
   @Published var events = [Event]()
+  @Published var backupEvents = [Event]()
   @Published var countrycode:String = "CA"
-  @Published var pageNo:String="1"
+  @Published var maxPageLoaded:Int=1
 
   init(){
       print("Initializing")
@@ -471,12 +483,13 @@ class EventViewModel:ObservableObject {
 
   func getData() async{
     do{
-      let data = try await fetchEvents()
+      let data = try await fetchEvents(pageNo:1)
       let decoder = JSONDecoder()
       decoder.keyDecodingStrategy = .convertFromSnakeCase
       let welcome = try decoder.decode(Welcome.self, from: data)
       DispatchQueue.main.async{
         self.events = welcome.embedded.events
+        print("I got the powaaah!")
       }
     } catch {
       print(String(describing:error))
@@ -484,12 +497,49 @@ class EventViewModel:ObservableObject {
   }
 
 
-  func fetchEvents() async throws  -> Data{
-    let url = URL(string: "\(Constants.baseURL)\(countrycode)&page=\(pageNo)&size=1&apikey=\(Constants.API_KEY)")!
+  func fetchEvents(pageNo:Int) async throws  -> Data{
+    let url = URL(string: "\(Constants.baseURL)\(countrycode)&page=\(pageNo)&size=20&apikey=\(Constants.API_KEY)")!
     print(url)
         let (data, _) = try await URLSession.shared.data(from: url)
-    print("--> data: \(String(describing: String(data: data, encoding: .utf8)))")
+//    print("--> data: \(String(describing: String(data: data, encoding: .utf8)))")
         return data
+  }
+
+  func fetchMoreEvents() async {
+    do{
+      let data = try await fetchEvents(pageNo:maxPageLoaded+1)
+      let decoder = JSONDecoder()
+      decoder.keyDecodingStrategy = .convertFromSnakeCase
+      let welcome = try decoder.decode(Welcome.self, from: data)
+      DispatchQueue.main.async{
+        self.events.append(contentsOf:welcome.embedded.events)
+        self.maxPageLoaded+=1
+        print("Page loaded \(self.events.count)")
+      }
+    } catch {
+      print(String(describing:error))
+    }
+  }
+
+  func shouldLoadMoreData(id:String) -> Bool {
+    return id == events[events.count-4].id
+  }
+
+  func parseSample() -> Event?{
+    if let fileUrl = Bundle.main.url(forResource: "eventsample", withExtension: "json") {
+         do {
+           let data = try Data(contentsOf: fileUrl)
+              let decoder = JSONDecoder()
+              decoder.keyDecodingStrategy = .convertFromSnakeCase
+              let welcome = try decoder.decode(Welcome.self, from: data)
+              let sampleEvents = welcome.embedded.events
+           print(sampleEvents[0])
+              return sampleEvents[0]
+            }
+         catch {
+                    //Handle error
+               }
+    };return nil
   }
 
 }

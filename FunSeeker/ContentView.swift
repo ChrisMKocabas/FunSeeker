@@ -21,41 +21,57 @@ struct ContentView: View {
 
   @State private var navSelection = 0
 
+
+  private var navbarTitles:[String] = ["Events Near You","Your Favourites","Saved Events"]
+
   var body: some View {
 
-    NavigationView{
-      TabView(selection:$navSelection) {
-        EventsView(eventViewModel:eventViewModel)
-          .tabItem {
-            Label("Upcoming", systemImage: "figure.socialdance")
-          }.tag(0)
+      NavigationStack{
+        ZStack{
+          TabView(selection:$navSelection) {
 
-        FavouriteEventsView(eventViewModel:eventViewModel)
-          .tabItem {
-            Label("Favourites", systemImage: "heart")
-          }.tag(1)
+            EventsView(eventViewModel:eventViewModel)
+              .tabItem {
+                Label("Upcoming", systemImage: "figure.socialdance")
+              }.tag(0)
 
-        SavedEventsView(eventViewModel:eventViewModel)
-          .tabItem {
-            Label("Saved", systemImage: "calendar")
-          }.tag(2)
+            FavouriteEventsView(eventViewModel:eventViewModel)
+              .tabItem {
+                Label("Favourites", systemImage: "heart")
+              }.tag(1)
 
-      }
-      .toolbar {
-        ToolbarItem (placement: .navigationBarTrailing){
-          NavigationLink(
-            destination: UserProfileView(),
-          label: {
-              Image(systemName: "person.crop.circle")
-          }).environmentObject(viewModel)
+            SavedEventsView(eventViewModel:eventViewModel)
+              .tabItem {
+                Label("Saved", systemImage: "calendar")
+              }.tag(2)
+
+          }
         }
-      }
+        .toolbar {
+          ToolbarItem (placement: .navigationBarTrailing){
+            NavigationLink(
+              destination: UserProfileView(),
+              label: {
+                Image(systemName: "person.crop.circle")
+              }).environmentObject(viewModel)
+          }
+
+          ToolbarItem(placement: .navigationBarLeading) {
+            Text("\(navbarTitles[navSelection])")
+              .fontWeight(.bold)
+              .font(.custom("System",size:20,relativeTo:.title))
+          }
+        }
+
+//      .onAppear(){
+//        Task{
+//          await eventViewModel.getData()
+//        }
+//      }
     }
-    .onAppear(){
-      Task{
-        await eventViewModel.getData()
-      }
-    }
+
+
+
   }
 
 }

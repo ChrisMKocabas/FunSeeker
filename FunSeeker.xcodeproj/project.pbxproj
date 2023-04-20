@@ -33,6 +33,9 @@
 		04F6D07F29E4E8B600A341D0 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 04F6D07E29E4E8B600A341D0 /* FirebaseFirestore */; };
 		04F6D08129E4E8BE00A341D0 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 04F6D08029E4E8BE00A341D0 /* FirebaseFirestoreSwift */; };
 		04F6D08329E4EA8800A341D0 /* FirebaseFirestoreCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 04F6D08229E4EA8800A341D0 /* FirebaseFirestoreCombine-Community */; };
+		04FCEC5129F1AFF100D8A058 /* EventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FCEC5029F1AFF100D8A058 /* EventView.swift */; };
+		04FCEC5529F1D01D00D8A058 /* events.json in Resources */ = {isa = PBXBuildFile; fileRef = 04FCEC5429F1D01D00D8A058 /* events.json */; };
+		04FCEC5729F1D11F00D8A058 /* PreviewEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FCEC5629F1D11F00D8A058 /* PreviewEvents.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +79,9 @@
 		04F6D07529E4E6C500A341D0 /* AuthenticationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
 		04F6D07629E4E6C500A341D0 /* SignupView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignupView.swift; sourceTree = "<group>"; };
 		04F6D07729E4E6C500A341D0 /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
+		04FCEC5029F1AFF100D8A058 /* EventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
+		04FCEC5429F1D01D00D8A058 /* events.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = events.json; sourceTree = "<group>"; };
+		04FCEC5629F1D11F00D8A058 /* PreviewEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewEvents.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +143,7 @@
 				0468B22929E37EA20021E8C5 /* FunSeekerApp.swift */,
 				0468B22B29E37EA20021E8C5 /* ContentView.swift */,
 				04D20BAE29F044B300490E87 /* EventsView.swift */,
+				04FCEC5029F1AFF100D8A058 /* EventView.swift */,
 				04D20BB029F044DE00490E87 /* FavouriteEventsView.swift */,
 				04D20BB229F044EE00490E87 /* SavedEventsView.swift */,
 				0468B22D29E37EA30021E8C5 /* Assets.xcassets */,
@@ -153,6 +160,8 @@
 			isa = PBXGroup;
 			children = (
 				0468B23029E37EA30021E8C5 /* Preview Assets.xcassets */,
+				04FCEC5429F1D01D00D8A058 /* events.json */,
+				04FCEC5629F1D11F00D8A058 /* PreviewEvents.swift */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -311,6 +320,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0468B23129E37EA30021E8C5 /* Preview Assets.xcassets in Resources */,
+				04FCEC5529F1D01D00D8A058 /* events.json in Resources */,
 				0468B26829E3B2DC0021E8C5 /* GoogleService-Info.plist in Resources */,
 				0468B22E29E37EA30021E8C5 /* Assets.xcassets in Resources */,
 			);
@@ -342,10 +352,12 @@
 				0468B23329E37EA30021E8C5 /* Persistence.swift in Sources */,
 				04D20BB129F044DE00490E87 /* FavouriteEventsView.swift in Sources */,
 				04F6D07D29E4E6C500A341D0 /* AuthenticationViewModel.swift in Sources */,
+				04FCEC5729F1D11F00D8A058 /* PreviewEvents.swift in Sources */,
 				04F6D07A29E4E6C500A341D0 /* AuthenticatedView.swift in Sources */,
 				0468B22C29E37EA20021E8C5 /* ContentView.swift in Sources */,
 				04F6D07929E4E6C500A341D0 /* UserProfileView.swift in Sources */,
 				04F6D07C29E4E6C500A341D0 /* SignupView.swift in Sources */,
+				04FCEC5129F1AFF100D8A058 /* EventView.swift in Sources */,
 				0468B23629E37EA30021E8C5 /* FunSeeker.xcdatamodeld in Sources */,
 				04F6D07B29E4E6C500A341D0 /* AuthenticationView.swift in Sources */,
 				04F6D07829E4E6C500A341D0 /* LoginView.swift in Sources */,

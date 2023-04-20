@@ -11,7 +11,12 @@ struct FavouriteEventsView: View {
 
   @ObservedObject var eventViewModel: EventViewModel
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+      VStack{
+        ZStack{
+          Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        }
+        
+      }
     }
 }
 
