@@ -46,7 +46,6 @@ struct EventsView: View {
             .scaledToFill()
             .frame(maxWidth: .infinity, maxHeight: 200)
             .clipped()
-
         }
         LazyVGrid(columns:columns) {
           ForEach(filtering ? filteredEvents : eventViewModel.events, id:\.self.id) {item in
