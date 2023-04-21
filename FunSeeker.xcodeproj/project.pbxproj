@@ -36,6 +36,7 @@
 		04FCEC5129F1AFF100D8A058 /* EventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FCEC5029F1AFF100D8A058 /* EventView.swift */; };
 		04FCEC5529F1D01D00D8A058 /* events.json in Resources */ = {isa = PBXBuildFile; fileRef = 04FCEC5429F1D01D00D8A058 /* events.json */; };
 		04FCEC5729F1D11F00D8A058 /* PreviewEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FCEC5629F1D11F00D8A058 /* PreviewEvents.swift */; };
+		04FCEC5929F217AB00D8A058 /* FireStoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FCEC5829F217AB00D8A058 /* FireStoreManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,6 +83,7 @@
 		04FCEC5029F1AFF100D8A058 /* EventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
 		04FCEC5429F1D01D00D8A058 /* events.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = events.json; sourceTree = "<group>"; };
 		04FCEC5629F1D11F00D8A058 /* PreviewEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewEvents.swift; sourceTree = "<group>"; };
+		04FCEC5829F217AB00D8A058 /* FireStoreManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FireStoreManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -143,6 +145,7 @@
 				0468B22929E37EA20021E8C5 /* FunSeekerApp.swift */,
 				0468B22B29E37EA20021E8C5 /* ContentView.swift */,
 				04D20BAE29F044B300490E87 /* EventsView.swift */,
+				04FCEC5829F217AB00D8A058 /* FireStoreManager.swift */,
 				04FCEC5029F1AFF100D8A058 /* EventView.swift */,
 				04D20BB029F044DE00490E87 /* FavouriteEventsView.swift */,
 				04D20BB229F044EE00490E87 /* SavedEventsView.swift */,
@@ -363,6 +366,7 @@
 				04F6D07829E4E6C500A341D0 /* LoginView.swift in Sources */,
 				0468B22A29E37EA20021E8C5 /* FunSeekerApp.swift in Sources */,
 				04D20BAF29F044B300490E87 /* EventsView.swift in Sources */,
+				04FCEC5929F217AB00D8A058 /* FireStoreManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

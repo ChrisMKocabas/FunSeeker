@@ -7,7 +7,8 @@
  
 import Foundation
 import SwiftUI
-
+import Firebase
+import FirebaseFirestoreSwift
 
 // MARK: - Welcome
 struct Welcome: Codable {

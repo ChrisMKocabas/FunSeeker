@@ -12,6 +12,7 @@ struct ContentView: View {
   @Environment(\.managedObjectContext) private var viewContext
   @EnvironmentObject var viewModel: AuthenticationViewModel
   @StateObject var eventViewModel = EventViewModel()
+  @StateObject var firestoreManager = FirestoreManager()
   @EnvironmentObject var presentingProfileScreen: ProfileScreenState
 
   @FetchRequest(
@@ -25,12 +26,13 @@ struct ContentView: View {
   private var navbarTitles:[String] = ["Events Near You","Your Favourites","Saved Events"]
 
   var body: some View {
-
+    
       NavigationStack{
         ZStack{
+
           TabView(selection:$navSelection) {
 
-            EventsView(eventViewModel:eventViewModel)
+            EventsView(eventViewModel:eventViewModel, firestoreManager:firestoreManager)
               .tabItem {
                 Label("Upcoming", systemImage: "figure.socialdance")
               }.tag(0)
@@ -40,19 +42,20 @@ struct ContentView: View {
                 Label("Favourites", systemImage: "heart")
               }.tag(1)
 
-            SavedEventsView(eventViewModel:eventViewModel)
+            SavedEventsView(eventViewModel:eventViewModel, firestoreManager:firestoreManager)
               .tabItem {
                 Label("Saved", systemImage: "calendar")
               }.tag(2)
 
-          }
+          }.background(Color.clear)
         }
+
         .toolbar {
           ToolbarItem (placement: .navigationBarTrailing){
             NavigationLink(
               destination: UserProfileView(),
               label: {
-                Image(systemName: "person.crop.circle")
+                Image(systemName: "person.crop.circle").foregroundColor(Color.black)
               }).environmentObject(viewModel)
           }
 
@@ -63,12 +66,13 @@ struct ContentView: View {
           }
         }
 
-//      .onAppear(){
-//        Task{
-//          await eventViewModel.getData()
-//        }
-//      }
-    }
+        //      .onAppear(){
+        //        Task{
+        //          await eventViewModel.getData()
+        //        }
+        //      }
+      }
+
 
 
 
