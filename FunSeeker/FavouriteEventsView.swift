@@ -48,7 +48,7 @@ struct FavouriteEventsView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fill)
                             .frame(minWidth: 120, idealWidth: 250, maxWidth: 250, minHeight: 120, idealHeight: 250, maxHeight: 250, alignment: .center)
-                            .clipShape(Circle()) // Add this line to clip to a circle
+                            .clipShape(Circle())
 
 
                         case .failure(_):
