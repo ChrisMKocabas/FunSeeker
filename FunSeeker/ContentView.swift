@@ -49,7 +49,7 @@ struct ContentView: View {
 
           }.background(Color.clear)
         }
- 
+
         .toolbar {
           ToolbarItem (placement: .navigationBarTrailing){
             NavigationLink(
@@ -66,11 +66,6 @@ struct ContentView: View {
           }
         }
 
-        //      .onAppear(){
-        //        Task{
-        //          await eventViewModel.getData()
-        //        }
-        //      }
       }
 
 
