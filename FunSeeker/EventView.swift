@@ -132,7 +132,7 @@ struct EventView: View {
         }
       }
     }
-}
+} 
 
 struct EventView_Previews: PreviewProvider {
     static var previews: some View {
