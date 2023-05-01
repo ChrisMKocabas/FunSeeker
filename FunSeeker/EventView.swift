@@ -23,7 +23,7 @@ struct EventView: View {
   private func saveToFavourites(){
 
   }
-
+ 
   
 
     var body: some View {
