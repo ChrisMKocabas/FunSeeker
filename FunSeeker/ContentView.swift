@@ -50,7 +50,7 @@ struct ContentView: View {
 
         }.background(Color.clear)
 
-
+ 
 //      .toolbar {
 //        ToolbarItem (placement: .navigationBarTrailing){
 //          NavigationLink(
