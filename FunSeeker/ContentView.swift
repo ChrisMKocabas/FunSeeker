@@ -41,7 +41,7 @@ struct ContentView: View {
           SavedEventsView(eventViewModel:eventViewModel, firestoreManager:firestoreManager)
             .tabItem {
               Label("Saved", systemImage: "calendar")
-            }.tag(2)
+            }.tag(2) 
 
           UserProfileView()
             .tabItem {
