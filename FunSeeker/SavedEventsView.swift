@@ -24,7 +24,7 @@ struct SavedEventsView: View {
   
   var body: some View {
     NavigationStack {
-      if (!firestoreManager.userEvents.isEmpty) {
+      if (firestoreManager.userEvents.count>0) {
         List{
           ForEach(filtering ? filteredEvents : firestoreManager.userEvents, id:\.self.id) {item in
             NavigationLink(value: item) {
@@ -64,13 +64,13 @@ struct SavedEventsView: View {
             }.frame(maxWidth: .infinity, maxHeight: 200)
               .background(Color.random().opacity(0.2).blur(radius: 30))
             
-              .onAppear(perform:{
-                if eventViewModel.shouldLoadMoreData(id: item.id){
-                  Task{
-                    firestoreManager.fetchUserEvents()
-                  }
-                }
-              })
+//              .onAppear(perform:{
+//                if eventViewModel.shouldLoadMoreData(id: item.id){
+//                  Task{
+//                    await firestoreManager.fetchUserEvents()
+//                  }
+//                }
+//              })
           }.onDelete { IndexSet in
             deleteItems(offsets: IndexSet)
           }   .padding(.vertical)
@@ -90,12 +90,9 @@ struct SavedEventsView: View {
     }
     .onAppear(){
       Task{
-        firestoreManager.fetchUserEvents()
-        
+        await firestoreManager.fetchUserEvents()
       }
     }
-    
-    
     .toolbar {
       ToolbarItem(placement: .navigationBarTrailing) {
         EditButton()
@@ -142,7 +139,9 @@ struct SavedEventsView: View {
 
 
 struct SavedEventsView_Previews: PreviewProvider {
-    static var previews: some View {
-        SavedEventsView(eventViewModel: EventViewModel(),firestoreManager: FirestoreManager()).environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+  static var previews: some View {
+    NavigationStack{
+      SavedEventsView(eventViewModel: EventViewModel(),firestoreManager: FirestoreManager())
     }
+  }
 }

@@ -23,18 +23,19 @@ struct FavouriteEventsView: View {
       let backgroundGradient = LinearGradient(
           colors: [Color.pink, Color.yellow],
           startPoint: .top, endPoint: .bottom)
+      NavigationStack{
+        ZStack {
+          backgroundGradient.ignoresSafeArea()
 
-      ZStack {
-        backgroundGradient.ignoresSafeArea()
           ScrollView(.horizontal, showsIndicators: false, content: {
             HStack {
               ForEach(eventViewModel.events) { event in
                 GeometryReader { geometry in
                   VStack(alignment:.center){
-//                    RoundedRectangle(cornerRadius: 20)
-//                      .rotation3DEffect(
-//                        Angle(degrees: getPercentage(geo: geometry) * 40),
-//                        axis: (x: 0.0, y: 1.0, z: 0.0))
+                    //                    RoundedRectangle(cornerRadius: 20)
+                    //                      .rotation3DEffect(
+                    //                        Angle(degrees: getPercentage(geo: geometry) * 40),
+                    //                        axis: (x: 0.0, y: 1.0, z: 0.0))
                     VStack(alignment: .center, spacing: 10){
                       AsyncImage(url:URL(string: event.images[0].url.replacingOccurrences(of: "http://", with: "https://"))) { phase in
                         switch phase {
@@ -66,20 +67,21 @@ struct FavouriteEventsView: View {
                         Text(event.innerembedded?.venues[0].name ?? "")
                         Text(event.dates.start.localDate)
                       }.foregroundColor(Color.black)
-                       }
+                    }
                   }.frame(width: 350, height: 450)
                     .background(Color.white.opacity(0.7))
                     .cornerRadius(30)
-                  .rotation3DEffect(
-                    Angle(degrees: getPercentage(geo: geometry) * 40),
-                    axis: (x: 0.0, y: 1.0, z: 0.0))
+                    .rotation3DEffect(
+                      Angle(degrees: getPercentage(geo: geometry) * 40),
+                      axis: (x: 0.0, y: 1.0, z: 0.0))
                 }
                 .frame(width: 350, height: 550)
                 .padding()
               }
             }
           })
-        } .onAppear(perform:{
+        }
+      }.onAppear(perform:{
             Task{
               await eventViewModel.fetchMoreEvents()
             }

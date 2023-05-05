@@ -17,8 +17,8 @@ class FirestoreManager: ObservableObject {
   @Published var userEvents: [Event] = []
   @Published var useCloud: Bool =  false
 
-
-  func fetchUserEvents() {
+  //non-async version of fetching events from firebase
+  func fetchUserEvents2() {
 
     guard let currentUser = Auth.auth().currentUser else {
       print("no user signed in")
@@ -53,6 +53,43 @@ class FirestoreManager: ObservableObject {
           print("No documents found.")
 
         }
+      }
+    }
+  }
+
+  //firebase collection fetch converted to async
+  func fetchUserEvents() async {
+
+    guard let currentUser = Auth.auth().currentUser else {
+      print("no user signed in")
+      // No user is currently signed in
+      return
+    }
+    print(currentUser.uid.description)
+
+    let db = Firestore.firestore()
+    let querySnapshot = db.collection("users").document("\(currentUser.uid.description)").collection("events")
+
+    Task {
+      do {
+        let snapshot = try await querySnapshot.getDocuments()
+        let documents = snapshot.documents
+        let models = documents.compactMap { (document) -> Event? in
+          do {
+            let jsonData = try JSONSerialization.data(withJSONObject: document.data(), options: [])
+            let model = try JSONDecoder().decode(Event.self, from: jsonData)
+            return model
+          } catch {
+            print("Error decoding document: \(error.localizedDescription)")
+            return nil
+          }
+        }
+        DispatchQueue.main.async {
+          self.userEvents = models
+        }
+      }
+      catch{
+        print("Error decoding document: \(error.localizedDescription)")
       }
     }
   }
