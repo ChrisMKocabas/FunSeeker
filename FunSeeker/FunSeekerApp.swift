@@ -27,14 +27,13 @@ struct FunSeekerApp: App {
     let persistenceController = PersistenceController.shared
     var body: some Scene {
         WindowGroup {
-          NavigationView{
             AuthenticatedView{
               ContentView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
 
             }
 
-          }
+          
         }
     }
 }

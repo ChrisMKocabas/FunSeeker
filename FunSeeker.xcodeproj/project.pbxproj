@@ -151,8 +151,8 @@
 				04D20BB229F044EE00490E87 /* SavedEventsView.swift */,
 				0468B22D29E37EA30021E8C5 /* Assets.xcassets */,
 				0468B26729E3B2DC0021E8C5 /* GoogleService-Info.plist */,
-				0468B23229E37EA30021E8C5 /* Persistence.swift */,
 				0493627429E3BE3E0088F846 /* EventModel.swift */,
+				0468B23229E37EA30021E8C5 /* Persistence.swift */,
 				0468B23429E37EA30021E8C5 /* FunSeeker.xcdatamodeld */,
 				0468B22F29E37EA30021E8C5 /* Preview Content */,
 			);
