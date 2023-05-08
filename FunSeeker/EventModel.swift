@@ -511,7 +511,6 @@ class EventViewModel:ObservableObject {
 
   func fetchEvents(pageNo:Int) async throws  -> Data{
     let url = URL(string: "\(Constants.baseURL)events.json?countryCode=\(countrycode)&page=\(pageNo)&size=20&apikey=\(Constants.API_KEY)")!
-    print(url)
         let (data, _) = try await URLSession.shared.data(from: url)
 //    print("--> data: \(String(describing: String(data: data, encoding: .utf8)))")
         return data
@@ -520,7 +519,6 @@ class EventViewModel:ObservableObject {
   func fetchSuggestions() async {
     do {
       let url = URL(string: "\(Constants.baseURL)suggest.json?countryCode=\(countrycode)&keyword=\(suggestionTerm)&size=5&apikey=\(Constants.API_KEY)")
-      print(url)
       let (data, _) = try await URLSession.shared.data(from: ((url ?? URL(string:"\(Constants.fallbackURL)"))!))
 
       let decoder = JSONDecoder()
