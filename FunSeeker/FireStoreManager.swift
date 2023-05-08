@@ -97,14 +97,10 @@ class FirestoreManager: ObservableObject {
   func saveToFirebase(event:Event) async {
     print("Save to firebase: \(event.id)")
     let user = Auth.auth().currentUser
-
     let db = Firestore.firestore()
-
+    
     // Get a reference to the user's document
     let userDocRef = db.collection("users").document(user?.uid ?? "")
-
-
-
     let newEventDocRef = userDocRef.collection("events").document("\(event.id)")
     do {
 

@@ -86,24 +86,6 @@ struct ContentView: View {
 
         }.background(Color.clear)
 
- 
-//      .toolbar {
-//        ToolbarItem (placement: .navigationBarTrailing){
-//          NavigationLink(
-//            destination: UserProfileView(),
-//            label: {
-//              Image(systemName: "person.crop.circle").foregroundColor(Color.black)
-//            }).environmentObject(viewModel)
-//        }
-//
-//        ToolbarItem(placement: .navigationBarLeading) {
-//          Text("\(navbarTitles[navSelection])")
-//            .fontWeight(.bold)
-//            .font(.custom("System",size:20,relativeTo:.title))
-//        }
-//      }
-
-
     }
 
 
