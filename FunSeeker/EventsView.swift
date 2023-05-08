@@ -86,7 +86,7 @@ struct EventsView: View {
             }
           } .navigationDestination(for: Event.self, destination: { item in
             EventView(eventViewModel:eventViewModel, firestoreManager:firestoreManager, item:[item])
-            
+              .navigationBarTitleDisplayMode (.inline)
           })
         }
       }
