@@ -23,6 +23,16 @@ struct Welcome: Codable {
     }
 }
 
+struct Suggestions: Codable {
+  let links: WelcomeLinks
+  let embedded: Embedded
+
+  enum CodingKeys: String, CodingKey {
+    case links = "_links"
+    case embedded = "_embedded"
+  }
+}
+
 // MARK: - WelcomeEmbedded
 struct Embedded: Codable {
     let events: [Event]
@@ -43,7 +53,7 @@ struct Event: Codable,Identifiable,Hashable {
     let name: String
     let type: String
     let id: String
-    let test: Bool
+    let test: Bool?
     let url: String?
     let locale: String?
     let images: [xImage]
@@ -142,7 +152,7 @@ struct Attraction: Codable {
     let name: String
     let type: AttractionType
     let id: String
-    let test: Bool
+    let test: Bool?
     let url: String?
     let locale: String
     let externalLinks: ExternalLinks?
@@ -220,11 +230,11 @@ struct Venue: Codable {
     let name: String
     let type: String
     let id: String
-    let test: Bool
+    let test: Bool?
     let url: String?
     let locale: String
     let images: [xImage]?
-    let postalCode: String
+    let postalCode: String?
     let timezone: String
     let city: City
     let state: xState
@@ -256,7 +266,7 @@ struct Ada: Codable {
 
 // MARK: - Address
 struct Address: Codable {
-    let line1: String
+    let line1: String?
     let line2: String?
 }
 
@@ -447,8 +457,8 @@ struct SafeTix: Codable {
 
 // MARK: - WelcomeLinks
 struct WelcomeLinks: Codable {
-    let first, prev, linksSelf, next: First
-    let last: First
+    let first, prev, linksSelf, next: First?
+    let last: First?
 
     enum CodingKeys: String, CodingKey {
         case first, prev
@@ -470,13 +480,15 @@ class EventViewModel:ObservableObject {
 
   struct Constants {
       static let API_KEY = "tgy0mOAGfxD4jSYSX86F0W6OuS33wZ0H"
-      static let baseURL = "https://app.ticketmaster.com/discovery/v2/events.json?countryCode="
+      static let baseURL = "https://app.ticketmaster.com/discovery/v2/"
+      static let fallbackURL = "https://app.ticketmaster.com/discovery/v2/events.json?countryCode=CA&page=0&size=20&apikey=tgy0mOAGfxD4jSYSX86F0W6OuS33wZ0H"
   }
 
   @Published var events = [Event]()
-  @Published var backupEvents = [Event]()
+  @Published var suggestions = [Event]()
   @Published var countrycode:String = "CA"
-  @Published var maxPageLoaded:Int=1
+  @Published var maxPageLoaded:Int=0
+  @Published var suggestionTerm: String = ""
 
   init(){
       print("Initializing")
@@ -484,7 +496,7 @@ class EventViewModel:ObservableObject {
 
   func getData() async{
     do{
-      let data = try await fetchEvents(pageNo:1)
+      let data = try await fetchEvents(pageNo:0)
       let decoder = JSONDecoder()
       decoder.keyDecodingStrategy = .convertFromSnakeCase
       let welcome = try decoder.decode(Welcome.self, from: data)
@@ -497,13 +509,31 @@ class EventViewModel:ObservableObject {
     }
   }
 
-
   func fetchEvents(pageNo:Int) async throws  -> Data{
-    let url = URL(string: "\(Constants.baseURL)\(countrycode)&page=\(pageNo)&size=20&apikey=\(Constants.API_KEY)")!
+    let url = URL(string: "\(Constants.baseURL)events.json?countryCode=\(countrycode)&page=\(pageNo)&size=20&apikey=\(Constants.API_KEY)")!
     print(url)
         let (data, _) = try await URLSession.shared.data(from: url)
 //    print("--> data: \(String(describing: String(data: data, encoding: .utf8)))")
         return data
+  }
+
+  func fetchSuggestions() async {
+    do {
+      let url = URL(string: "\(Constants.baseURL)suggest.json?countryCode=\(countrycode)&keyword=\(suggestionTerm)&size=5&apikey=\(Constants.API_KEY)")
+      print(url)
+      let (data, _) = try await URLSession.shared.data(from: ((url ?? URL(string:"\(Constants.fallbackURL)"))!))
+
+      let decoder = JSONDecoder()
+      decoder.keyDecodingStrategy = .convertFromSnakeCase
+      let suggestions = try decoder.decode(Suggestions.self, from: data)
+      DispatchQueue.main.async{
+        self.suggestions = suggestions.embedded.events
+        print("Suggestions loaded!")
+      }
+
+    } catch {
+      print(String(describing:error))
+    }
   }
 
   func fetchMoreEvents() async {
@@ -523,8 +553,14 @@ class EventViewModel:ObservableObject {
   }
 
   func shouldLoadMoreData(id:String) -> Bool {
-    return id == events[events.count-4].id
+    if events.count > 19 {
+      return id == events[events.count-4].id
+    } else {
+      return false
+    }
   }
+
+
 
   func parseSample() -> Event?{
     if let fileUrl = Bundle.main.url(forResource: "eventsample", withExtension: "json") {
@@ -533,7 +569,7 @@ class EventViewModel:ObservableObject {
               let decoder = JSONDecoder()
               decoder.keyDecodingStrategy = .convertFromSnakeCase
               let welcome = try decoder.decode(Welcome.self, from: data)
-              let sampleEvents = welcome.embedded.events
+           let sampleEvents = welcome.embedded.events
            print(sampleEvents[0])
               return sampleEvents[0]
             }

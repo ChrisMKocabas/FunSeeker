@@ -28,22 +28,58 @@ struct ContentView: View {
 
         TabView(selection:$navSelection) {
 
-          EventsView(eventViewModel:eventViewModel, firestoreManager:firestoreManager)
+          NavigationStack{
+            EventsView(eventViewModel:eventViewModel, firestoreManager:firestoreManager)
+              .toolbar{
+                ToolbarItem(placement: .navigationBarLeading) {
+                  Text("\(navbarTitles[navSelection])")
+                    .fontWeight(.bold)
+                    .font(.custom("System",size:20,relativeTo:.title))
+                }
+              }
+          }
             .tabItem {
               Label("Upcoming", systemImage: "figure.socialdance")
             }.tag(0)
 
-          FavouriteEventsView(eventViewModel:eventViewModel)
+          NavigationStack{
+            FavouriteEventsView(eventViewModel:eventViewModel)
+              .toolbar{
+                ToolbarItem(placement: .navigationBarLeading) {
+                  Text("\(navbarTitles[navSelection])")
+                    .fontWeight(.bold)
+                    .font(.custom("System",size:20,relativeTo:.title))
+                }
+              }
+          }
             .tabItem {
               Label("Favourites", systemImage: "heart")
             }.tag(1)
 
-          SavedEventsView(eventViewModel:eventViewModel, firestoreManager:firestoreManager)
+          NavigationStack{
+            SavedEventsView(eventViewModel:eventViewModel, firestoreManager:firestoreManager)
+              .toolbar{
+                ToolbarItem(placement: .navigationBarLeading) {
+                  Text("\(navbarTitles[navSelection])")
+                    .fontWeight(.bold)
+                    .font(.custom("System",size:20,relativeTo:.title))
+                }
+              }
+          }
             .tabItem {
               Label("Saved", systemImage: "calendar")
             }.tag(2) 
 
-          UserProfileView()
+          NavigationStack{
+            UserProfileView()
+              .toolbar{
+                ToolbarItem(placement: .navigationBarLeading) {
+                  Text("\(navbarTitles[navSelection])")
+                    .fontWeight(.bold)
+                    .font(.custom("System",size:20,relativeTo:.title))
+                }
+              }
+          }
             .tabItem {
               Label("Profile", systemImage: "person.crop.circle")
             }.tag(3)

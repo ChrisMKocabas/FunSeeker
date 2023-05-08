@@ -23,7 +23,7 @@ struct FavouriteEventsView: View {
       let backgroundGradient = LinearGradient(
           colors: [Color.pink, Color.yellow],
           startPoint: .top, endPoint: .bottom)
-      NavigationStack{
+      VStack{
         ZStack {
           backgroundGradient.ignoresSafeArea()
 
@@ -83,7 +83,7 @@ struct FavouriteEventsView: View {
         }
       }.onAppear(perform:{
             Task{
-              await eventViewModel.fetchMoreEvents()
+              await eventViewModel.getData()
             }
         })
         

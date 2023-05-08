@@ -24,18 +24,16 @@ struct EventView: View {
 
   }
  
-  
+  let backgroundGradient = LinearGradient(
+    colors: [Color.red, Color.blue],
+    startPoint: .top, endPoint: .bottom)
 
-    var body: some View {
-      let backgroundGradient = LinearGradient(
-          colors: [Color.red, Color.blue],
-          startPoint: .top, endPoint: .bottom)
+  var body: some View {
 
       ZStack {
         backgroundGradient.ignoresSafeArea()
         VStack{
 
-          Spacer()
           AsyncImage(url:URL(string: item[0].images[0].url.replacingOccurrences(of: "http://", with: "https://"))) { phase in
             switch phase {
             case .empty:
@@ -83,7 +81,7 @@ struct EventView: View {
             Text("\(item[0].innerembedded?.venues[0].ada?.adaPhones ?? "")").foregroundColor(Color.indigo.opacity(0.6))
           }.padding(.horizontal,60)
             .padding(.vertical,20)
-          .background(Color.white.opacity(0.6) .blur(radius: 20))
+            .background(Color.white.opacity(0.6) .blur(radius: 20))
 
 
           Spacer()
@@ -130,8 +128,8 @@ struct EventView: View {
             .padding(.bottom,10)
 
         }
-      }
     }
+  }
 } 
 
 struct EventView_Previews: PreviewProvider {

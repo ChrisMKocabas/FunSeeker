@@ -23,7 +23,7 @@ struct SavedEventsView: View {
   @State private var filteredEvents = [Event]()
   
   var body: some View {
-    NavigationStack {
+    VStack {
       if (firestoreManager.userEvents.count>0) {
         List{
           ForEach(filtering ? filteredEvents : firestoreManager.userEvents, id:\.self.id) {item in
