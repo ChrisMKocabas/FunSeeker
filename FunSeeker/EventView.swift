@@ -62,7 +62,7 @@ struct EventView: View {
           }
           Spacer()
           VStack(alignment: .leading, spacing: 10){
-            Text("\(item[0].name) \(item[0].type.capitalized)").font(Font.headline.weight(.bold))
+            Text("\(item[0].name) \(item[0].type?.capitalized ?? "Event")").font(Font.headline.weight(.bold))
             Text("Date: \(item[0].dates.start.localDate) - \(item[0].dates.start.localTime ?? "TBA")")
             VStack(alignment: .leading, spacing: 10){
               Text("Venue: \(item[0].innerembedded?.venues[0].name ?? "TBA")")
