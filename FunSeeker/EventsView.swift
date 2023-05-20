@@ -17,12 +17,13 @@ struct EventsView: View {
   @State private var toolbarVisibility : Visibility = .hidden
 
   let backgroundGradient = LinearGradient(
-    colors: [Color.blue, Color.green],
-    startPoint: .top, endPoint: .bottom)
+      colors: [Color.pink, Color.yellow],
+      startPoint: .top, endPoint: .bottom)
+
 
   let columns:[GridItem] = [
     GridItem(.flexible(), spacing: 2,alignment: nil),
-    GridItem(.flexible(), spacing: 2,alignment: nil)
+//    GridItem(.flexible(), spacing: 2,alignment: nil)
 
   ]
 
@@ -32,19 +33,19 @@ struct EventsView: View {
         backgroundGradient.ignoresSafeArea()
         ScrollView(showsIndicators: false){
           ZStack{
-            Image("banner")
-              .resizable()
-              .scaledToFill()
-              .frame(maxWidth: .infinity, maxHeight: 240)
-              .clipped()
-              .blur(radius: 15)
-              .padding(.bottom,20)
+//            Image("banner")
+//              .resizable()
+//              .scaledToFill()
+//              .frame(maxWidth: .infinity, maxHeight: 240)
+//              .clipped()
+//              .blur(radius: 15)
+//              .padding(.bottom,20)
             
-            Image("banner")
-              .resizable()
-              .scaledToFill()
-              .frame(maxWidth: .infinity, maxHeight: 200)
-              .clipped()
+//            Image("banner")
+//              .resizable()
+//              .scaledToFill()
+//              .frame(maxWidth: .infinity, maxHeight: 200)
+//              .clipped()
           }
           LazyVGrid(columns:columns) {
             ForEach(eventViewModel.events, id:\.self.id) {item in
@@ -116,7 +117,6 @@ struct EventsView: View {
        }
    })
 
-
           
   }
 }
@@ -152,14 +152,14 @@ struct ExtractedView: View {
           case .empty:
             ProgressView()
               .aspectRatio(contentMode: .fit)
-              .frame(maxWidth: 150, maxHeight: 100)
+              .frame(maxWidth: .infinity,maxHeight: 250)
               .clipShape(Ellipse()) // Add this line to clip to a circle
           case .success(let image):
             image
               .resizable()
               .scaledToFill()
               .aspectRatio(contentMode: .fill)
-              .frame(maxWidth: 150,maxHeight: 250)
+              .frame(maxWidth: .infinity,maxHeight: 250)
               .clipped()
               .cornerRadius(10)
 
@@ -167,7 +167,7 @@ struct ExtractedView: View {
             Image("banner")
               .resizable()
               .aspectRatio(contentMode: .fit)
-              .frame(maxWidth: 150,maxHeight: 100)
+              .frame(maxWidth: .infinity,maxHeight: 250)
               .clipShape(Ellipse())
           @unknown default:
             EmptyView()

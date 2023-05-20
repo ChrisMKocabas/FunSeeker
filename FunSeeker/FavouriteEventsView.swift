@@ -10,6 +10,7 @@ import SwiftUI
 struct FavouriteEventsView: View {
 
   @ObservedObject var eventViewModel: EventViewModel
+  @ObservedObject var firestoreManager : FirestoreManager
 
   func getPercentage(geo: GeometryProxy) -> Double {
     let maxDistance = UIScreen.main.bounds.width / 2
@@ -29,7 +30,7 @@ struct FavouriteEventsView: View {
 
           ScrollView(.horizontal, showsIndicators: false, content: {
             HStack {
-              ForEach(eventViewModel.events) { event in
+              ForEach(firestoreManager.favouriteEvents) { event in
                 GeometryReader { geometry in
                   VStack(alignment:.center){
                     //                    RoundedRectangle(cornerRadius: 20)
@@ -63,9 +64,7 @@ struct FavouriteEventsView: View {
                         }
                       }
                       VStack(alignment: .leading, spacing: 10){
-                        Text(event.name)
-                        Text(event.innerembedded?.venues[0].name ?? "")
-                        Text(event.dates.start.localDate)
+                        Text((event.innerembedded?.attractions?[0].name)!)
                       }.foregroundColor(Color.black)
                     }
                   }.frame(width: 350, height: 450)
@@ -83,7 +82,8 @@ struct FavouriteEventsView: View {
         }
       }.onAppear(perform:{
             Task{
-              await eventViewModel.getData()
+//              await eventViewModel.getData()
+              await firestoreManager.fetchUserFavourites()
             }
         })
         
@@ -94,7 +94,7 @@ struct FavouriteEventsView: View {
 
 struct FavouriteEventsView_Previews: PreviewProvider {
     static var previews: some View {
-      FavouriteEventsView(eventViewModel: EventViewModel())
+      FavouriteEventsView(eventViewModel: EventViewModel(), firestoreManager: FirestoreManager())
     }
 }
 

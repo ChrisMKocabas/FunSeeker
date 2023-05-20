@@ -59,7 +59,7 @@ struct Event: Codable,Identifiable,Hashable {
     let images: [xImage]
     let sales: Sales?
     let dates: Dates
-    let classifications: [Classification]
+    let classifications: [Classification]?
     let promoter: Promoter?
     let promoters: [Promoter]?
     let info: String?
@@ -362,8 +362,8 @@ struct Outlet: Codable {
 // MARK: - PriceRange
 struct PriceRange: Codable {
     let type: String?
-    let currency: String
-    let min, max: Double
+    let currency: String?
+    let min, max: Double?
 }
 
 //enum Currency: String, Codable {
@@ -507,10 +507,10 @@ class EventViewModel:ObservableObject {
     } catch {
       print(String(describing:error))
     }
-  }
+  } 
 
   func fetchEvents(pageNo:Int) async throws  -> Data{
-    let url = URL(string: "\(Constants.baseURL)events.json?countryCode=\(countrycode)&startDateTime=2023-05-08T00:00:00Z&sort=date,asc&page=\(pageNo)&size=20&apikey=\(Constants.API_KEY)")!
+    let url = URL(string: "\(Constants.baseURL)events.json?countryCode=\(countrycode)&startDateTime=2023-05-18T00:00:00Z&sort=date,asc&page=\(pageNo)&size=20&apikey=\(Constants.API_KEY)")!
         let (data, _) = try await URLSession.shared.data(from: url)
 //    print("--> data: \(String(describing: String(data: data, encoding: .utf8)))")
         return data

@@ -21,71 +21,98 @@ struct SavedEventsView: View {
   
   @State private var filtering = false
   @State private var filteredEvents = [Event]()
+
+  let backgroundGradient = LinearGradient(
+      colors: [Color.pink, Color.yellow],
+      startPoint: .top, endPoint: .bottom)
   
   var body: some View {
-    VStack {
-      if (firestoreManager.userEvents.count>0) {
-        List{
-          ForEach(filtering ? filteredEvents : firestoreManager.userEvents, id:\.self.id) {item in
-            NavigationLink(value: item) {
-              HStack(alignment: .center, spacing: 10){
-                AsyncImage(url:URL(string: item.images[0].url.replacingOccurrences(of: "http://", with: "https://"))) { phase in
-                  switch phase {
-                  case .empty:
-                    ProgressView()
-                      .aspectRatio(contentMode: .fit)
-                      .frame(maxWidth: 150, maxHeight: 150)
-                      .clipShape(Circle()) // Add this line to clip to a circle
-                  case .success(let image):
-                    image
-                      .resizable()
-                      .aspectRatio(contentMode: .fill)
-                      .frame(minWidth: 80, idealWidth: 150, maxWidth: 150, minHeight: 80, idealHeight: 150, maxHeight: 150, alignment: .center)
-                      .clipShape(Circle()) // Add this line to clip to a circle
-                    
-                    
-                  case .failure(_):
-                    Image("banner")
-                      .resizable()
-                      .aspectRatio(contentMode: .fill)
-                      .frame(maxWidth: 150,maxHeight: 150)
-                      .clipShape(Circle())
-                  @unknown default:
-                    EmptyView()
+
+      VStack {
+        ZStack{
+          backgroundGradient.ignoresSafeArea()
+        if (firestoreManager.userEvents.count>0) {
+          List{
+            ForEach(filtering ? filteredEvents : firestoreManager.userEvents, id:\.self.id) {item in
+
+              Section{
+
+                NavigationLink(value: item) {
+                  HStack(alignment: .center, spacing: 10){
+                    AsyncImage(url:URL(string: item.images[0].url.replacingOccurrences(of: "http://", with: "https://"))) { phase in
+                      switch phase {
+                      case .empty:
+                        ProgressView()
+                          .aspectRatio(contentMode: .fit)
+                          .frame(maxWidth: 150, maxHeight: 150)
+                          .clipShape(Circle()) // Add this line to clip to a circle
+                      case .success(let image):
+                        image
+                          .resizable()
+                          .aspectRatio(contentMode: .fill)
+                          .frame(minWidth: 80, idealWidth: 150, maxWidth: 150, minHeight: 80, idealHeight: 150, maxHeight: 150, alignment: .center)
+                          .clipShape(Circle()) // Add this line to clip to a circle
+
+
+                      case .failure(_):
+                        Image("banner")
+                          .resizable()
+                          .aspectRatio(contentMode: .fill)
+                          .frame(maxWidth: 150,maxHeight: 150)
+                          .clipShape(Circle())
+                      @unknown default:
+                        EmptyView()
+                      }
+                    }
+                    VStack(alignment: .leading, spacing: 10){
+                      Text(item.name)
+                      Text(item.innerembedded?.venues[0].name ?? "")
+                      Text(item.dates.start.localDate)
+                    }.foregroundColor(Color.black)
                   }
                 }
-                VStack(alignment: .leading, spacing: 10){
-                  Text(item.name)
-                  Text(item.innerembedded?.venues[0].name ?? "")
-                  Text(item.dates.start.localDate)
-                }.foregroundColor(Color.black)
-              }
-              
-            }.frame(maxWidth: .infinity, maxHeight: 200)
-              .background(Color.random().opacity(0.2).blur(radius: 30))
-            
-//              .onAppear(perform:{
-//                if eventViewModel.shouldLoadMoreData(id: item.id){
-//                  Task{
-//                    await firestoreManager.fetchUserEvents()
-//                  }
-//                }
-//              })
-          }.onDelete { IndexSet in
-            deleteItems(offsets: IndexSet)
-          }   .padding(.vertical)
-          
-          
-          
-        }.navigationDestination(for: Event.self, destination: { item in
-          EventView(eventViewModel:eventViewModel, firestoreManager: firestoreManager, item:[item])
-        })
-        .frame( maxWidth: .infinity)
-        .edgesIgnoringSafeArea(.horizontal)
-        .listStyle(GroupedListStyle())
-        
-      } else {
-        Text("No Favourites Yet!")
+              } header: {
+                Text(item.name)
+                  .foregroundColor(Color.white)
+                  .fontWeight(.bold)
+                  .font(.custom("System",size:20,relativeTo:.title))
+                  .multilineTextAlignment(.center)
+                  
+
+            }.frame(maxWidth: .infinity, maxHeight: 400)
+              .listRowBackground(
+                  RoundedRectangle(cornerRadius: 10)
+                      .fill(Color(white: 1, opacity: 0.5))
+                      .padding(.vertical, 2).padding(.horizontal, 10))
+                .background(Color.random().opacity(0.2).blur(radius: 30)) 
+
+              //              .onAppear(perform:{
+              //                if eventViewModel.shouldLoadMoreData(id: item.id){
+              //                  Task{
+              //                    await firestoreManager.fetchUserEvents()
+              //                  }
+              //                }
+              //              })
+             
+            }.onDelete { IndexSet in
+              deleteItems(offsets: IndexSet)
+            }   .padding(.vertical)
+
+
+
+          }.scrollContentBackground(.hidden)
+          .background(backgroundGradient.edgesIgnoringSafeArea(.all))
+
+          .navigationDestination(for: Event.self, destination: { item in
+            EventView(eventViewModel:eventViewModel, firestoreManager: firestoreManager, item:[item])
+          })
+          .frame( maxWidth: .infinity)
+          .edgesIgnoringSafeArea(.horizontal)
+          .listStyle(GroupedListStyle())
+
+        } else {
+          Text("No Favourites Yet!")
+        }
       }
     }
     .onAppear(){
@@ -97,8 +124,8 @@ struct SavedEventsView: View {
       ToolbarItem(placement: .navigationBarTrailing) {
         EditButton()
       }
-
     }
+    .toolbarBackground(Color(red: 1, green: 0.3157, blue: 0.3333), for: .navigationBar)
     
   }
   

@@ -19,8 +19,8 @@
 		0468B25E29E3A5270021E8C5 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 0468B25D29E3A5270021E8C5 /* FirebaseAnalytics */; };
 		0468B26029E3A5270021E8C5 /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0468B25F29E3A5270021E8C5 /* FirebaseAnalyticsSwift */; };
 		0468B26329E3AE970021E8C5 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 0468B26229E3AE970021E8C5 /* FirebaseAuth */; };
-		0468B26829E3B2DC0021E8C5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0468B26729E3B2DC0021E8C5 /* GoogleService-Info.plist */; };
 		0493627529E3BE3E0088F846 /* EventModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493627429E3BE3E0088F846 /* EventModel.swift */; };
+		04B5996B2A16F4EA008381A3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 04B5996A2A16F4EA008381A3 /* GoogleService-Info.plist */; };
 		04D20BAF29F044B300490E87 /* EventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D20BAE29F044B300490E87 /* EventsView.swift */; };
 		04D20BB129F044DE00490E87 /* FavouriteEventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D20BB029F044DE00490E87 /* FavouriteEventsView.swift */; };
 		04D20BB329F044EE00490E87 /* SavedEventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D20BB229F044EE00490E87 /* SavedEventsView.swift */; };
@@ -69,8 +69,8 @@
 		0468B24529E37EA30021E8C5 /* FunSeekerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FunSeekerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0468B24929E37EA30021E8C5 /* FunSeekerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunSeekerUITests.swift; sourceTree = "<group>"; };
 		0468B24B29E37EA30021E8C5 /* FunSeekerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunSeekerUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		0468B26729E3B2DC0021E8C5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0493627429E3BE3E0088F846 /* EventModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventModel.swift; sourceTree = "<group>"; };
+		04B5996A2A16F4EA008381A3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		04D20BAE29F044B300490E87 /* EventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsView.swift; sourceTree = "<group>"; };
 		04D20BB029F044DE00490E87 /* FavouriteEventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteEventsView.swift; sourceTree = "<group>"; };
 		04D20BB229F044EE00490E87 /* SavedEventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedEventsView.swift; sourceTree = "<group>"; };
@@ -150,8 +150,8 @@
 				04D20BB029F044DE00490E87 /* FavouriteEventsView.swift */,
 				04D20BB229F044EE00490E87 /* SavedEventsView.swift */,
 				0468B22D29E37EA30021E8C5 /* Assets.xcassets */,
-				0468B26729E3B2DC0021E8C5 /* GoogleService-Info.plist */,
 				0493627429E3BE3E0088F846 /* EventModel.swift */,
+				04B5996A2A16F4EA008381A3 /* GoogleService-Info.plist */,
 				0468B23229E37EA30021E8C5 /* Persistence.swift */,
 				0468B23429E37EA30021E8C5 /* FunSeeker.xcdatamodeld */,
 				0468B22F29E37EA30021E8C5 /* Preview Content */,
@@ -304,7 +304,6 @@
 			mainGroup = 0468B21D29E37EA20021E8C5;
 			packageReferences = (
 				0468B25C29E3A5270021E8C5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				041C076E29ED098600BA6219 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			productRefGroup = 0468B22729E37EA20021E8C5 /* Products */;
 			projectDirPath = "";
@@ -323,8 +322,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				0468B23129E37EA30021E8C5 /* Preview Assets.xcassets in Resources */,
+				04B5996B2A16F4EA008381A3 /* GoogleService-Info.plist in Resources */,
 				04FCEC5529F1D01D00D8A058 /* events.json in Resources */,
-				0468B26829E3B2DC0021E8C5 /* GoogleService-Info.plist in Resources */,
 				0468B22E29E37EA30021E8C5 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -693,14 +692,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		041C076E29ED098600BA6219 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.0.0;
-			};
-		};
 		0468B25C29E3A5270021E8C5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";

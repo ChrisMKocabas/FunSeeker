@@ -17,6 +17,11 @@ enum TransactionType {
   case blank
 }
 
+let backgroundGradient = LinearGradient(
+    colors: [Color.pink, Color.yellow],
+    startPoint: .top, endPoint: .bottom)
+
+
 
 struct UserProfileView: View {
   @EnvironmentObject var viewModel: AuthenticationViewModel
@@ -71,10 +76,12 @@ struct UserProfileView: View {
             }
           }
         }
-        .listRowBackground(Color(UIColor.systemGroupedBackground))
+//        .listRowBackground(Color(UIColor.systemGroupedBackground))
+        .listRowBackground(Color.white.opacity(0))
+
         Section("Email") {
           Text(viewModel.displayName)
-        }
+        }.listRowBackground(Color.white.opacity(0.8))
 
         Section {
           Button( action: updatePassword) {
@@ -84,7 +91,7 @@ struct UserProfileView: View {
               Spacer()
             }
           }
-        }
+        }.listRowBackground(Color.white.opacity(0.8))
         Section {
           Button( action: updateEmail) {
             HStack {
@@ -93,7 +100,7 @@ struct UserProfileView: View {
               Spacer()
             }
           }
-        }
+        }.listRowBackground(Color.white.opacity(0.8))
         Section {
           Button(role: .cancel, action: signOut) {
             HStack {
@@ -102,7 +109,7 @@ struct UserProfileView: View {
               Spacer()
             }
           }
-        }
+        }.listRowBackground(Color.white.opacity(0.8))
         Section {
           Button(role: .destructive, action: { presentingConfirmationDialog.toggle() }) {
             HStack {
@@ -111,8 +118,13 @@ struct UserProfileView: View {
               Spacer()
             }
           }
-        }
-      }
+        }.listRowBackground(Color.white.opacity(0.8))
+      }.scrollContentBackground(.hidden)
+       .foregroundColor(Color.black)
+       .background(backgroundGradient.ignoresSafeArea())
+       .tint(Color.orange)
+      
+
       ZStack {
         NewScreen(showNewScreen: $showNewScreen, transactionStatus: $transactionStatus)
           .padding(.top, 100)
@@ -124,6 +136,7 @@ struct UserProfileView: View {
     }
     .navigationTitle("Profile")
     .navigationBarTitleDisplayMode(.inline)
+    .toolbarBackground(Color(red: 1, green: 0.3157, blue: 0.3333), for: .navigationBar)
     .analyticsScreen(name: "\(Self.self)")
     .confirmationDialog("Deleting your account is permanent. Do you want to delete your account?",
                         isPresented: $presentingConfirmationDialog, titleVisibility: .visible) {
@@ -178,8 +191,10 @@ struct NewScreen: View {
 
     var body: some View {
         ZStack(alignment: .topLeading) {
-          Color(UIColor(red: 0.93, green: 0.94, blue: 0.95, alpha: 0.95))
+          Color(UIColor(red: 0.93, green: 0.94, blue: 0.95, alpha: 0.9))
                 .edgesIgnoringSafeArea(.all)
+          backgroundGradient
+            .edgesIgnoringSafeArea(.all).opacity(0.7)
 
             Button(action: {
               //presentationMode.wrappedValue.dismiss()
@@ -207,12 +222,12 @@ struct NewScreen: View {
                 .cornerRadius(12)
                 .padding(.vertical, 15)
 
-              TextField("Please enter new \(String(describing: transactionStatus)): ", text: $email)
+              TextField("Enter new \(String(describing: transactionStatus)): ", text: $email)
                 .padding()
                 .multilineTextAlignment(.leading)
                 .background(Color.white)
                 .cornerRadius(12)
-              SecureField("Please enter password: ", text: $password)
+              SecureField("Enter password: ", text: $password)
                 .padding()
                 .multilineTextAlignment(.leading)
                 .background(Color.white)
@@ -225,8 +240,8 @@ struct NewScreen: View {
                   Spacer()
                 }
               }.frame(maxWidth: .infinity,maxHeight: 60)
-                .foregroundColor(Color.blue)
-                .background(Color.white)
+                .foregroundColor(Color.black)
+                .background(Color.white.opacity(0.8))
                 .fontWeight(.semibold)
                 .cornerRadius(12)
                 .padding(.top,20)
@@ -234,14 +249,14 @@ struct NewScreen: View {
 
             } else {
 
-              SecureField("Plese enter current password", text: $password)
+              SecureField("Enter current password", text: $password)
                 .frame(maxWidth: .infinity, alignment:.leading)
                 .padding()
                 .background(Color.white)
                 .cornerRadius(12)
                 .padding(.vertical, 20)
 
-              SecureField("Please enter new password: ", text: $newPassword)
+              SecureField("Enter new password: ", text: $newPassword)
                 .padding()
                 .multilineTextAlignment(.leading)
                 .background(Color.white)
@@ -257,8 +272,8 @@ struct NewScreen: View {
                   Text("Update")
                   Spacer()
                 }.frame(maxWidth: .infinity,maxHeight: 60)
-                  .foregroundColor(Color.blue)
-                  .background(Color.white)
+                  .foregroundColor(Color.black)
+                  .background(Color.white.opacity(0.8))
                   .fontWeight(.semibold)
                   .cornerRadius(12)
                   .padding(.top,20)
