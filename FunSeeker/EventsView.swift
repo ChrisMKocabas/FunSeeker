@@ -32,7 +32,7 @@ struct EventsView: View {
       ZStack {
         backgroundGradient.ignoresSafeArea()
         ScrollView(showsIndicators: false){
-          ZStack{
+//          ZStack{
 //            Image("banner")
 //              .resizable()
 //              .scaledToFill()
@@ -40,22 +40,19 @@ struct EventsView: View {
 //              .clipped()
 //              .blur(radius: 15)
 //              .padding(.bottom,20)
-            
+//
 //            Image("banner")
 //              .resizable()
 //              .scaledToFill()
 //              .frame(maxWidth: .infinity, maxHeight: 200)
 //              .clipped()
-          }
+//          }
           LazyVGrid(columns:columns) {
             ForEach(eventViewModel.events, id:\.self.id) {item in
               ExtractedView(item:item)
                 .frame(maxWidth: .infinity, maxHeight: 400)
-
                 .background(Color.random().opacity(0.1))
                 .padding(.vertical,10)
-
-
                 .onAppear(perform:{
                   if eventViewModel.shouldLoadMoreData(id: item.id){
                     Task{
@@ -65,18 +62,15 @@ struct EventsView: View {
                 })
             }.border(Color.gray.opacity(0.4))
               .padding(4)
-            
-            
           }
         }
         .onAppear(){
           Task{
             await eventViewModel.getData()
-            
           }
-          
         }
-      }.searchable(text: $searchText,placement: .navigationBarDrawer(displayMode: .always), prompt: "Looking for an event?") {
+      }
+      .searchable(text: $searchText,placement: .navigationBarDrawer(displayMode: .always), prompt: "Looking for an event?") {
         ZStack{
           ScrollView {
             LazyVGrid(columns:columns) {
@@ -116,8 +110,6 @@ struct EventsView: View {
          $0.animation = .default.speed(1.5)
        }
    })
-
-          
   }
 }
 

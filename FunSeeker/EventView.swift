@@ -2,7 +2,7 @@
 //  EventView.swift
 //  FunSeeker
 //
-//  Created by Muhammed Kocabas on 2023-04-20.
+//  Created by Chris Kocabas on 2023-04-20.
 //
 
 import SwiftUI

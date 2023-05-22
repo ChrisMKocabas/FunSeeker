@@ -21,6 +21,7 @@
 		0468B26329E3AE970021E8C5 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 0468B26229E3AE970021E8C5 /* FirebaseAuth */; };
 		0493627529E3BE3E0088F846 /* EventModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493627429E3BE3E0088F846 /* EventModel.swift */; };
 		04B5996B2A16F4EA008381A3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 04B5996A2A16F4EA008381A3 /* GoogleService-Info.plist */; };
+		04B8622C2A19A23E00711B49 /* FavouritesDetailedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B8622B2A19A23E00711B49 /* FavouritesDetailedView.swift */; };
 		04D20BAF29F044B300490E87 /* EventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D20BAE29F044B300490E87 /* EventsView.swift */; };
 		04D20BB129F044DE00490E87 /* FavouriteEventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D20BB029F044DE00490E87 /* FavouriteEventsView.swift */; };
 		04D20BB329F044EE00490E87 /* SavedEventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D20BB229F044EE00490E87 /* SavedEventsView.swift */; };
@@ -71,6 +72,7 @@
 		0468B24B29E37EA30021E8C5 /* FunSeekerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunSeekerUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		0493627429E3BE3E0088F846 /* EventModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventModel.swift; sourceTree = "<group>"; };
 		04B5996A2A16F4EA008381A3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		04B8622B2A19A23E00711B49 /* FavouritesDetailedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesDetailedView.swift; sourceTree = "<group>"; };
 		04D20BAE29F044B300490E87 /* EventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsView.swift; sourceTree = "<group>"; };
 		04D20BB029F044DE00490E87 /* FavouriteEventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteEventsView.swift; sourceTree = "<group>"; };
 		04D20BB229F044EE00490E87 /* SavedEventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedEventsView.swift; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 				04FCEC5829F217AB00D8A058 /* FireStoreManager.swift */,
 				04FCEC5029F1AFF100D8A058 /* EventView.swift */,
 				04D20BB029F044DE00490E87 /* FavouriteEventsView.swift */,
+				04B8622B2A19A23E00711B49 /* FavouritesDetailedView.swift */,
 				04D20BB229F044EE00490E87 /* SavedEventsView.swift */,
 				0468B22D29E37EA30021E8C5 /* Assets.xcassets */,
 				0493627429E3BE3E0088F846 /* EventModel.swift */,
@@ -359,6 +362,7 @@
 				0468B22C29E37EA20021E8C5 /* ContentView.swift in Sources */,
 				04F6D07929E4E6C500A341D0 /* UserProfileView.swift in Sources */,
 				04F6D07C29E4E6C500A341D0 /* SignupView.swift in Sources */,
+				04B8622C2A19A23E00711B49 /* FavouritesDetailedView.swift in Sources */,
 				04FCEC5129F1AFF100D8A058 /* EventView.swift in Sources */,
 				0468B23629E37EA30021E8C5 /* FunSeeker.xcdatamodeld in Sources */,
 				04F6D07B29E4E6C500A341D0 /* AuthenticationView.swift in Sources */,

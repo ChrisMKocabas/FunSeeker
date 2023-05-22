@@ -486,9 +486,11 @@ class EventViewModel:ObservableObject {
 
   @Published var events = [Event]()
   @Published var suggestions = [Event]()
+  @Published var favourites = [Event]()
   @Published var countrycode:String = "CA"
   @Published var maxPageLoaded:Int=0
   @Published var suggestionTerm: String = ""
+  @Published var favouriteTerm: String = ""
 
   init(){
       print("Initializing")
@@ -516,23 +518,6 @@ class EventViewModel:ObservableObject {
         return data
   }
 
-  func fetchSuggestions() async {
-    do {
-      let url = URL(string: "\(Constants.baseURL)suggest.json?countryCode=\(countrycode)&keyword=\(suggestionTerm)&size=5&apikey=\(Constants.API_KEY)")
-      let (data, _) = try await URLSession.shared.data(from: ((url ?? URL(string:"\(Constants.fallbackURL)"))!))
-
-      let decoder = JSONDecoder()
-      decoder.keyDecodingStrategy = .convertFromSnakeCase
-      let suggestions = try decoder.decode(Suggestions.self, from: data)
-      DispatchQueue.main.async{
-        self.suggestions = suggestions.embedded.events
-        print("Suggestions loaded!")
-      }
-
-    } catch {
-      print(String(describing:error))
-    }
-  }
 
   func fetchMoreEvents() async {
     do{
@@ -559,7 +544,6 @@ class EventViewModel:ObservableObject {
   }
 
 
-
   func parseSample() -> Event?{
     if let fileUrl = Bundle.main.url(forResource: "eventsample", withExtension: "json") {
          do {
@@ -575,6 +559,43 @@ class EventViewModel:ObservableObject {
                     //Handle error
                }
     };return nil
+  }
+
+  func fetchSuggestions() async {
+    do {
+      let url = URL(string: "\(Constants.baseURL)suggest.json?countryCode=\(countrycode)&keyword=\(suggestionTerm)&size=5&apikey=\(Constants.API_KEY)")
+      let (data, _) = try await URLSession.shared.data(from: ((url ?? URL(string:"\(Constants.fallbackURL)"))!))
+
+      let decoder = JSONDecoder()
+      decoder.keyDecodingStrategy = .convertFromSnakeCase
+      let suggestions = try decoder.decode(Suggestions.self, from: data)
+      DispatchQueue.main.async{
+        self.suggestions = suggestions.embedded.events
+        print("Suggestions loaded!")
+      }
+
+    } catch {
+      print(String(describing:error))
+    }
+  }
+
+  func fetchFavourites() async {
+    do {
+      let url = URL(string: "\(Constants.baseURL)events.json?keyword=\(favouriteTerm)&countryCode=\(countrycode)&apikey=\(Constants.API_KEY)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
+      print(url)
+      let (data, _) = try await URLSession.shared.data(from: ((url ?? URL(string:"\(Constants.fallbackURL)"))!))
+
+      let decoder = JSONDecoder()
+      decoder.keyDecodingStrategy = .convertFromSnakeCase
+      let favourites = try decoder.decode(Welcome.self, from: data)
+      DispatchQueue.main.async{
+        self.favourites = favourites.embedded.events
+        print("Favourite sublist loaded!")
+      }
+
+    } catch {
+      print(String(describing:error))
+    }
   }
 
 }
