@@ -19,28 +19,26 @@ struct ContentView: View {
     animation: .default)
   private var items: FetchedResults<Item>
 
-  @State private var navSelection = 0
+  @StateObject var sharedInformation = SharedInfo()
 
 
   private var navbarTitles:[String] = ["Events Near You","Your Favourites","Saved Events","Profile"]
 
   var body: some View {
 
-        TabView(selection:$navSelection) {
-
+    TabView(selection:$sharedInformation.currentTab) {
           NavigationStack{
             EventsView(eventViewModel:eventViewModel, firestoreManager:firestoreManager)
               .toolbar{
                 ToolbarItem(placement: .navigationBarLeading) {
-                  Text("\(navbarTitles[navSelection])")
-                    .fontWeight(.bold)
-                    .font(.custom("System",size:20,relativeTo:.title))
+                  Text("\(navbarTitles[sharedInformation.currentTab])")
+                    .font(.system(size: 20, weight: .heavy, design: .rounded))
                     .foregroundColor(Color.black)
+               
 
                 }
               }
               .toolbarBackground(Color(red: 1, green: 0.3157, blue: 0.3333), for: .navigationBar)
-
 
           }
             .tabItem {
@@ -54,9 +52,8 @@ struct ContentView: View {
             FavouriteEventsView(eventViewModel:eventViewModel, firestoreManager: firestoreManager)
               .toolbar{
                 ToolbarItem(placement: .navigationBarLeading) {
-                  Text("\(navbarTitles[navSelection])")
-                    .fontWeight(.bold)
-                    .font(.custom("System",size:20,relativeTo:.title))
+                  Text("\(navbarTitles[sharedInformation.currentTab])")
+                    .font(.system(size: 20, weight: .heavy, design: .rounded))
                 }
               }
           }
@@ -69,9 +66,8 @@ struct ContentView: View {
             SavedEventsView(eventViewModel:eventViewModel, firestoreManager:firestoreManager)
               .toolbar{
                 ToolbarItem(placement: .navigationBarLeading) {
-                  Text("\(navbarTitles[navSelection])")
-                    .fontWeight(.bold)
-                    .font(.custom("System",size:20,relativeTo:.title))
+                  Text("\(navbarTitles[sharedInformation.currentTab])")
+                    .font(.system(size: 20, weight: .heavy, design: .rounded))
                 }
               }
           }
@@ -84,9 +80,8 @@ struct ContentView: View {
             UserProfileView()
               .toolbar{
                 ToolbarItem(placement: .navigationBarLeading) {
-                  Text("\(navbarTitles[navSelection])")
-                    .fontWeight(.bold)
-                    .font(.custom("System",size:20,relativeTo:.title))
+                  Text("\(navbarTitles[sharedInformation.currentTab])")
+                    .font(.system(size: 20, weight: .heavy, design: .rounded))
                 }
               }
           }
@@ -99,8 +94,9 @@ struct ContentView: View {
 
         }.background(Color.clear)
           .tint(Color.black)
+          .environmentObject(sharedInformation)
 
-    }
+  }
 
 
 }
@@ -111,4 +107,10 @@ struct ContentView_Previews: PreviewProvider {
       ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
         .environmentObject(AuthenticationViewModel())
     }
+}
+
+
+class SharedInfo:ObservableObject {
+
+  @Published var currentTab:Int = 0
 }

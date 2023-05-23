@@ -75,7 +75,7 @@ struct SavedEventsView: View {
                 Text(item.name)
                   .foregroundColor(Color.white)
                   .fontWeight(.bold)
-                  .font(.custom("System",size:20,relativeTo:.title))
+                  .font(.system(size: 20, weight: .semibold, design: .rounded))
                   .multilineTextAlignment(.center)
                   
 
@@ -84,15 +84,7 @@ struct SavedEventsView: View {
                   RoundedRectangle(cornerRadius: 10)
                       .fill(Color(white: 1, opacity: 0.5))
                       .padding(.vertical, 2).padding(.horizontal, 10))
-                .background(Color.random().opacity(0.2).blur(radius: 30)) 
-
-              //              .onAppear(perform:{
-              //                if eventViewModel.shouldLoadMoreData(id: item.id){
-              //                  Task{
-              //                    await firestoreManager.fetchUserEvents()
-              //                  }
-              //                }
-              //              })
+                .background(Color.random().opacity(0.2).blur(radius: 30))
              
             }.onDelete { IndexSet in
               deleteItems(offsets: IndexSet)
@@ -126,6 +118,7 @@ struct SavedEventsView: View {
       }
     }
     .toolbarBackground(Color(red: 1, green: 0.3157, blue: 0.3333), for: .navigationBar)
+    
     
   }
   

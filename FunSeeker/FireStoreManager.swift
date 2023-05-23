@@ -113,6 +113,26 @@ class FirestoreManager: ObservableObject {
     }
 
 }
+
+  // save an event to firebase saved events collection
+  func removeSavedEvent(event:Event) async {
+    print("Remove saved event: \(event.id)")
+    let user = Auth.auth().currentUser
+    let db = Firestore.firestore()
+
+    // Get a reference to the user's document
+    let userDocRef = db.collection("users").document(user?.uid ?? "")
+    let newEventDocRef = userDocRef.collection("events").document("\(event.id)")
+    do {
+
+      let _ = try await newEventDocRef.delete()
+      await fetchUserEvents()
+  }
+    catch{
+      print("\(error)")
+    }
+
+}
     
     func shouldUseCloud() async {
         if !userEvents.isEmpty {
@@ -137,6 +157,29 @@ class FirestoreManager: ObservableObject {
       do {
 
         let _ = try newEventDocRef.setData(from: event)
+      }
+      catch{
+        print("\(error)")
+      }
+
+    }
+  }
+
+  //save a favourite event to firebase
+  func removeFromFavourites(event:Event) async {
+    print("Remove from favourites: \(event.innerembedded?.attractions?.first?.name ?? "")")
+    if let attractionName = event.innerembedded?.attractions?[0].name {
+
+      let user = Auth.auth().currentUser
+      let db = Firestore.firestore()
+
+      // Get a reference to the user's document
+      let userDocRef = db.collection("users").document(user?.uid ?? "")
+      let newEventDocRef = userDocRef.collection("favourites").document("\(attractionName)")
+      do {
+        let _ = try await newEventDocRef.delete()
+
+        await fetchUserFavourites()
       }
       catch{
         print("\(error)")

@@ -12,6 +12,8 @@ import SwiftUI
 struct EventView: View {
 
   @Environment(\.openURL) var openURL
+  @Environment(\.presentationMode) var presentationMode
+  @EnvironmentObject var sharedInformation:SharedInfo
   @ObservedObject var eventViewModel: EventViewModel
   @ObservedObject var firestoreManager: FirestoreManager
   let item:[Event]
@@ -23,11 +25,10 @@ struct EventView: View {
   private func saveToFavourites() async{
     await firestoreManager.saveFavourite(event: item[0])
   }
- 
-//  let backgroundGradient = LinearGradient(
-//    colors: [Color.red, Color.blue],
-//    startPoint: .top, endPoint: .bottom)
 
+  private func removeSavedEvent() async {
+    await firestoreManager.removeSavedEvent(event: item[0])
+  }
 
   let backgroundGradient = LinearGradient(
       colors: [Color.pink, Color.yellow],
@@ -90,12 +91,18 @@ struct EventView: View {
             Spacer()
             Button(action: {
               Task{
-                await saveEvent()
+                if !(sharedInformation.currentTab == 2){
+                  await saveEvent()
+                }else {
+                  await removeSavedEvent()
+                  presentationMode.wrappedValue.dismiss()
+                }
               }
             },label:{
               HStack {
                 Spacer()
-                Text("Save This Event")
+                (sharedInformation.currentTab == 2) ? Text("Remove Saved Event") : Text("Save This Event")
+
                 Spacer()
               }
             }).frame(maxWidth: 300,maxHeight: 40)
@@ -106,23 +113,26 @@ struct EventView: View {
               .padding(.horizontal,20)
               .padding(.bottom,5)
 
-            Button(action: {
-              Task{
-                await saveToFavourites()
-              }
-            }, label: {
-              HStack {
-                Spacer()
-                Text("Add to Favourites")
-                Spacer()
-              }
-            }).frame(maxWidth: 300,maxHeight: 40)
-              .foregroundColor(Color.white)
-              .background(Color.green)
-              .fontWeight(.semibold)
-              .cornerRadius(20)
-              .padding(.horizontal,20)
-              .padding(.bottom,5)
+            if !(sharedInformation.currentTab == 1){
+              Button(action: {
+                Task{
+                    await saveToFavourites()
+                }
+              }, label: {
+                HStack {
+                  Spacer()
+                   Text("Add to Favourites")
+                  Spacer()
+                }
+              }).frame(maxWidth: 300,maxHeight: 40)
+                .foregroundColor(Color.white)
+                .background(Color.green)
+                .fontWeight(.semibold)
+                .cornerRadius(20)
+                .padding(.horizontal,20)
+                .padding(.bottom,5)
+            } else {
+            }
 
             Button("Buy Tickets (External)") {
               if let urlString = item[0].innerembedded?.attractions?[0].url {
@@ -154,7 +164,7 @@ struct EventView: View {
 
 struct EventView_Previews: PreviewProvider {
     static var previews: some View {
-      EventView(eventViewModel: EventViewModel(), firestoreManager: FirestoreManager(), item:PreviewEvents.load(name: "events") )
+      EventView(eventViewModel: EventViewModel(), firestoreManager: FirestoreManager(), item:PreviewEvents.load(name: "events") ).environmentObject(SharedInfo())
     }
 }
 

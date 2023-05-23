@@ -15,6 +15,7 @@ struct EventsView: View {
   @State private var searchText = ""
   @State private var filteredEvents = [Event]()
   @State private var toolbarVisibility : Visibility = .hidden
+  
 
   let backgroundGradient = LinearGradient(
       colors: [Color.pink, Color.yellow],
@@ -50,9 +51,7 @@ struct EventsView: View {
           LazyVGrid(columns:columns) {
             ForEach(eventViewModel.events, id:\.self.id) {item in
               ExtractedView(item:item)
-                .frame(maxWidth: .infinity, maxHeight: 400)
-                .background(Color.random().opacity(0.1))
-                .padding(.vertical,10)
+                .frame(maxWidth: .infinity,idealHeight: 400, maxHeight: 600)
                 .onAppear(perform:{
                   if eventViewModel.shouldLoadMoreData(id: item.id){
                     Task{
@@ -60,8 +59,11 @@ struct EventsView: View {
                     }
                   }
                 })
-            }.border(Color.gray.opacity(0.4))
-              .padding(4)
+            } .overlay(
+              RoundedRectangle(cornerRadius: 30)
+                .stroke(Color.white, lineWidth:1)
+          )
+              .padding(10)
           }
         }
         .onAppear(){
@@ -77,12 +79,15 @@ struct EventsView: View {
               ForEach(eventViewModel.suggestions, id: \.self.id){ result in
                 ExtractedView(item:result)
                   .searchCompletion(result)
-              }
+              }.background(Color.black.opacity(0.2))
+                .cornerRadius(30, corners: .allCorners)
+                .padding()
             }
-          } .navigationDestination(for: Event.self, destination: { item in
-            EventView(eventViewModel:eventViewModel, firestoreManager:firestoreManager, item:[item])
-              .navigationBarTitleDisplayMode (.inline)
-          })
+          }
+//          .navigationDestination(for: Event.self, destination: { item in
+//            EventView(eventViewModel:eventViewModel, firestoreManager:firestoreManager, item:[item])
+//              .navigationBarTitleDisplayMode (.inline)
+//          })
         }
       }
         .onChange(of: searchText) { value in
@@ -102,6 +107,8 @@ struct EventsView: View {
             eventViewModel.suggestions = []
           }
         }
+
+      
 
    }.navigationDestination(for: Event.self, destination: { item in
      EventView(eventViewModel:eventViewModel, firestoreManager:firestoreManager, item:[item])
@@ -139,38 +146,43 @@ struct ExtractedView: View {
   var body: some View {
     NavigationLink(value: item) {
       VStack{
+
         AsyncImage(url:URL(string: item.images[0].url.replacingOccurrences(of: "http://", with: "https://"))) { phase in
           switch phase {
           case .empty:
             ProgressView()
               .aspectRatio(contentMode: .fit)
               .frame(maxWidth: .infinity,maxHeight: 250)
-              .clipShape(Ellipse()) // Add this line to clip to a circle
+              .clipShape(RoundedRectangle(cornerRadius: 30))
           case .success(let image):
             image
               .resizable()
-              .scaledToFill()
               .aspectRatio(contentMode: .fill)
-              .frame(maxWidth: .infinity,maxHeight: 250)
-              .clipped()
-              .cornerRadius(10)
+              .frame(maxWidth: .infinity, maxHeight: 200)
+              .clipShape(RoundedRectangle(cornerRadius: 30))
 
           case .failure(_):
             Image("banner")
               .resizable()
               .aspectRatio(contentMode: .fit)
               .frame(maxWidth: .infinity,maxHeight: 250)
-              .clipShape(Ellipse())
+              .clipShape(RoundedRectangle(cornerRadius: 30))
           @unknown default:
             EmptyView()
           }
-        }
+        }.overlay(
+          RoundedRectangle(cornerRadius: 30)
+            .stroke(Color.white, lineWidth:2)
+      )
+        Spacer()
         VStack(alignment: .center, spacing: 10){
           Text(item.name)
           Text(item.innerembedded?.venues[0].name ?? "")
           Text(item.dates.start.localDate)
         }.foregroundColor(Color.black)
-      }
+        Spacer()
+      }.background(Color.white.opacity(0.5))
+        .cornerRadius(30, corners: .allCorners)
 
     }
 

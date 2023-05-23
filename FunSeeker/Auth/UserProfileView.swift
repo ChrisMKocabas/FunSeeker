@@ -134,7 +134,6 @@ struct UserProfileView: View {
           .offset(y: showNewScreen ? 0 : UIScreen.main.bounds.height)
       }
     }
-    .navigationTitle("Profile")
     .navigationBarTitleDisplayMode(.inline)
     .toolbarBackground(Color(red: 1, green: 0.3157, blue: 0.3333), for: .navigationBar)
     .analyticsScreen(name: "\(Self.self)")
@@ -207,7 +206,7 @@ struct NewScreen: View {
               verifyPassword = ""
             }, label: {
                 Image(systemName: "xmark")
-                    .foregroundColor(.blue)
+                    .foregroundColor(.black)
                     .font(.largeTitle)
                     .padding(20)
             })

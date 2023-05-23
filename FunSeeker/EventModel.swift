@@ -512,7 +512,8 @@ class EventViewModel:ObservableObject {
   } 
 
   func fetchEvents(pageNo:Int) async throws  -> Data{
-    let url = URL(string: "\(Constants.baseURL)events.json?countryCode=\(countrycode)&startDateTime=2023-05-18T00:00:00Z&sort=date,asc&page=\(pageNo)&size=20&apikey=\(Constants.API_KEY)")!
+    let currentDate = NSDate.now.ISO8601Format()
+    let url = URL(string: "\(Constants.baseURL)events.json?countryCode=\(countrycode)&startDateTime=\(currentDate)&sort=date,asc&page=\(pageNo)&size=20&apikey=\(Constants.API_KEY)")!
         let (data, _) = try await URLSession.shared.data(from: url)
 //    print("--> data: \(String(describing: String(data: data, encoding: .utf8)))")
         return data
@@ -562,8 +563,9 @@ class EventViewModel:ObservableObject {
   }
 
   func fetchSuggestions() async {
+    let currentDate = NSDate.now.ISO8601Format()
     do {
-      let url = URL(string: "\(Constants.baseURL)suggest.json?countryCode=\(countrycode)&keyword=\(suggestionTerm)&size=5&apikey=\(Constants.API_KEY)")
+      let url = URL(string: "\(Constants.baseURL)suggest.json?countryCode=\(countrycode)&keyword=\(suggestionTerm)&startDateTime=\(currentDate)&size=5&apikey=\(Constants.API_KEY)")
       let (data, _) = try await URLSession.shared.data(from: ((url ?? URL(string:"\(Constants.fallbackURL)"))!))
 
       let decoder = JSONDecoder()
@@ -580,9 +582,9 @@ class EventViewModel:ObservableObject {
   }
 
   func fetchFavourites() async {
+    let currentDate = NSDate.now.ISO8601Format()
     do {
-      let url = URL(string: "\(Constants.baseURL)events.json?keyword=\(favouriteTerm)&countryCode=\(countrycode)&apikey=\(Constants.API_KEY)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
-      print(url)
+      let url = URL(string: "\(Constants.baseURL)events.json?keyword=\(favouriteTerm)&countryCode=\(countrycode)&startDateTime=\(currentDate)&apikey=\(Constants.API_KEY)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
       let (data, _) = try await URLSession.shared.data(from: ((url ?? URL(string:"\(Constants.fallbackURL)"))!))
 
       let decoder = JSONDecoder()
@@ -594,6 +596,10 @@ class EventViewModel:ObservableObject {
       }
 
     } catch {
+      DispatchQueue.main.async{
+        self.favourites = [Event]()
+        print("Favourite sublist cleared!")
+      }
       print(String(describing:error))
     }
   }
