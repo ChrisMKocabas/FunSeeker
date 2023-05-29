@@ -13,6 +13,9 @@ struct ContentView: View {
   @StateObject var eventViewModel = EventViewModel()
   @StateObject var firestoreManager = FirestoreManager()
   @EnvironmentObject var presentingProfileScreen: ProfileScreenState
+  
+  @StateObject var networkManager = NetworkManager()
+  @StateObject var localFileManager = LocalFileManager()
 
   @FetchRequest(
     sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
@@ -28,7 +31,7 @@ struct ContentView: View {
 
     TabView(selection:$sharedInformation.currentTab) {
           NavigationStack{
-            EventsView(eventViewModel:eventViewModel, firestoreManager:firestoreManager)
+            EventsView(eventViewModel:eventViewModel, firestoreManager:firestoreManager, networkManager:networkManager,localFileManager:localFileManager)
               .toolbar{
                 ToolbarItem(placement: .navigationBarLeading) {
                   Text("\(navbarTitles[sharedInformation.currentTab])")
@@ -95,6 +98,8 @@ struct ContentView: View {
         }.background(Color.clear)
           .tint(Color.black)
           .environmentObject(sharedInformation)
+//          .environmentObject(networkManager)
+          .environmentObject(localFileManager)
 
   }
 

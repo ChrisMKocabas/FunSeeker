@@ -9,6 +9,7 @@ import SwiftUI
 
 
 
+
 struct EventView: View {
 
   @Environment(\.openURL) var openURL
@@ -16,6 +17,10 @@ struct EventView: View {
   @EnvironmentObject var sharedInformation:SharedInfo
   @ObservedObject var eventViewModel: EventViewModel
   @ObservedObject var firestoreManager: FirestoreManager
+
+  @State var isExpanded = false
+  @State var subviewHeight : CGFloat = 0
+  
   let item:[Event]
 
   private func saveEvent() async{
@@ -33,133 +38,183 @@ struct EventView: View {
   let backgroundGradient = LinearGradient(
       colors: [Color.pink, Color.yellow],
       startPoint: .top, endPoint: .bottom)
-  
+
+  let columns:[GridItem] = [
+    GridItem(.flexible(), spacing: 2,alignment: nil),
+//    GridItem(.flexible(), spacing: 2,alignment: nil)
+
+  ]
+
   var body: some View {
 
-      ZStack {
-        backgroundGradient.ignoresSafeArea()
-        VStack{
-
-          AsyncImage(url:URL(string: item[0].images[0].url.replacingOccurrences(of: "http://", with: "https://"))) { phase in
-            switch phase {
-            case .empty:
-              ProgressView()
-                .aspectRatio(contentMode: .fit)
-                .frame(maxWidth: .infinity,maxHeight: 220)
-
-            case .success(let image):
-              image
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(maxWidth: .infinity,maxHeight: 220)
-                .clipShape(RoundedRectangle(cornerRadius: 20))
-
-            case .failure(_):
-              Image("banner")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(maxWidth: .infinity,maxHeight: 220)
-            @unknown default:
-              EmptyView()
-            }
-
+    ScrollView{
+        AsyncImage(url:URL(string: item[0].images[0].url.replacingOccurrences(of: "http://", with: "https://"))) { phase in
+          switch phase {
+          case .empty:
+            ProgressView()
+              .aspectRatio(contentMode: .fit)
+              .frame(maxWidth: .infinity,maxHeight: 220)
+            
+          case .success(let image):
+            image
+              .resizable()
+              .aspectRatio(contentMode: .fill)
+              .frame(maxWidth: .infinity,maxHeight: 220)
+              .clipShape(RoundedRectangle(cornerRadius: 20))
+            
+          case .failure(_):
+            Image("banner")
+              .resizable()
+              .aspectRatio(contentMode: .fit)
+              .frame(maxWidth: .infinity,maxHeight: 220)
+          @unknown default:
+            EmptyView()
           }
-          Spacer()
-          VStack{
+          
+        }
+        Spacer()
+        VStack{
+          VStack(alignment: .leading, spacing: 10){
+            Text("\(item[0].name) \(item[0].type?.capitalized ?? "")").font(Font.headline.weight(.bold))
+            HStack{
+              Text("Date: ").fontWeight(.bold)
+              Text(item[0].dates.start.localDate)
+              Spacer()
+              Text("Time: ").fontWeight(.bold)
+              Text(item[0].dates.start.localTime ?? "TBA")
+            }
             VStack(alignment: .leading, spacing: 10){
-              Text("\(item[0].name) \(item[0].type?.capitalized ?? "Event")").font(Font.headline.weight(.bold))
-              Text("Date: \(item[0].dates.start.localDate) - Time: \(item[0].dates.start.localTime ?? "TBA")")
-              VStack(alignment: .leading, spacing: 10){
-                Text("Venue: \(item[0].innerembedded?.venues[0].name ?? "TBA")")
-                Text("\(item[0].innerembedded?.venues[0].address.line1 ?? "TBA")")
-                Text("\(item[0].innerembedded?.venues[0].city.name ?? "TBA") - \(item[0].innerembedded?.venues[0].country.name ?? "TBA")")
-                Text("Tap to view on map").multilineTextAlignment(.center)
-
+              HStack{
+                Text("Venue: ").fontWeight(.bold)
+                Text(item[0].innerembedded?.venues[0].name ?? "TBA")
               }
-              .onTapGesture {
-                if let longtitude = item[0].innerembedded?.venues[0].location?.longitude,
-                   let latitude = item[0].innerembedded?.venues[0].location?.latitude {
-                  let mapsURL = URL(string: "maps://q?\(latitude),\(longtitude)")!
-                  openURL(URL(string:"\(mapsURL)") ?? URL(string: "")!)
+              HStack(alignment: .top){
+                Text("Address: ").fontWeight(.bold)
+                VStack(alignment: .leading){
+                  Text("\(item[0].innerembedded?.venues[0].address.line1 ?? "TBA")")
+                  Text("\(item[0].innerembedded?.venues[0].city.name ?? "TBA") - \(item[0].innerembedded?.venues[0].country.name ?? "TBA")")
+                  Text("Tap to view on map").multilineTextAlignment(.center).foregroundColor(.indigo)
+                    .onTapGesture {
+                      if let longtitude = item[0].innerembedded?.venues[0].location?.longitude,
+                         let latitude = item[0].innerembedded?.venues[0].location?.latitude {
+                        let mapsURL = URL(string: "maps://q?\(latitude),\(longtitude)")!
+                        openURL(URL(string:"\(mapsURL)") ?? URL(string: "")!)
+                      }
+                    }
                 }
+                
               }
-              Text("\(item[0].innerembedded?.venues[0].ada?.adaPhones ?? "")").foregroundColor(Color.indigo.opacity(0.6))
             }
 
+            
+            VStack {
+              Text("Additional info:").fontWeight(.bold)
+              if ((item.first?.info) != nil) {Text("Tap to expand").foregroundColor(Color.gray)}
+              Text(item.first?.info ?? "").lineLimit(15,reservesSpace: true)
+              HStack{
+                Text((item[0].innerembedded?.venues[0].ada?.adaPhones ?? "").replacingOccurrences(of: "Ticketmaster:", with: "Contact:")).lineLimit(3,reservesSpace: true)
+                Spacer()
+              }
+              
+            }
+            .background(GeometryReader {
+              Color.clear.preference(key: ViewHeightKey.self,
+                                     value: $0.frame(in: .local).size.height)
+            })
+            .onPreferenceChange(ViewHeightKey.self) { subviewHeight = $0 }
+            .frame(height: isExpanded ? subviewHeight : 80, alignment: .top)
+            .padding()
+            .clipped()
+            .frame(maxWidth: .infinity)
+            .transition(.move(edge: .bottom))
+            .background(Color(red: 0.97, green: 0.97, blue: 1).cornerRadius(10.0))
+            .onTapGesture {
+              withAnimation(.easeIn(duration: 0.5)) {
+                isExpanded.toggle()
+              }
+            }
+            
 
-
-            Spacer()
+            
+          }.padding()
+          
+          
+          
+          
+          Spacer()
+          Button(action: {
+            Task{
+              if !(sharedInformation.currentTab == 2){
+                await saveEvent()
+              }else {
+                await removeSavedEvent()
+                presentationMode.wrappedValue.dismiss()
+              }
+            }
+          },label:{
+            HStack {
+              Spacer()
+              (sharedInformation.currentTab == 2) ? Text("Remove Saved Event") : Text("Save This Event")
+              
+              Spacer()
+            }
+          }).frame(width: 300,height: 40)
+            .foregroundColor(Color.white)
+            .background(Color.pink)
+            .fontWeight(.semibold)
+            .cornerRadius(20)
+            .padding(.horizontal,20)
+            .padding(.bottom,5)
+          
+          if !(sharedInformation.currentTab == 1){
             Button(action: {
               Task{
-                if !(sharedInformation.currentTab == 2){
-                  await saveEvent()
-                }else {
-                  await removeSavedEvent()
-                  presentationMode.wrappedValue.dismiss()
-                }
+                await saveToFavourites()
               }
-            },label:{
+            }, label: {
               HStack {
                 Spacer()
-                (sharedInformation.currentTab == 2) ? Text("Remove Saved Event") : Text("Save This Event")
-
+                Text("Add to Favourites")
                 Spacer()
               }
-            }).frame(maxWidth: 300,maxHeight: 40)
+            }).frame(width: 300,height: 40)
               .foregroundColor(Color.white)
-              .background(Color.pink)
+              .background(Color.green)
               .fontWeight(.semibold)
               .cornerRadius(20)
               .padding(.horizontal,20)
               .padding(.bottom,5)
-
-            if !(sharedInformation.currentTab == 1){
-              Button(action: {
-                Task{
-                    await saveToFavourites()
-                }
-              }, label: {
-                HStack {
-                  Spacer()
-                   Text("Add to Favourites")
-                  Spacer()
-                }
-              }).frame(maxWidth: 300,maxHeight: 40)
-                .foregroundColor(Color.white)
-                .background(Color.green)
-                .fontWeight(.semibold)
-                .cornerRadius(20)
-                .padding(.horizontal,20)
-                .padding(.bottom,5)
-            } else {
-            }
-
-            Button("Buy Tickets (External)") {
-              if let urlString = item[0].innerembedded?.attractions?[0].url {
-                print("\(String(describing: urlString))")
-                openURL(URL(string: "\(String(describing: urlString))") ?? URL(string: "https://www.ticketmaster.com/")!)
-              }}.frame(maxWidth: 300,maxHeight: 40)
-              .foregroundColor(Color.white)
-              .background(Color.purple)
-              .fontWeight(.semibold)
-              .cornerRadius(20)
-              .padding(.horizontal,20)
-              .padding(.bottom,0)
-
+          } else {
           }
-          .frame(maxWidth: .infinity,maxHeight: .infinity)
-          .padding(.top,10)
-          .padding(.bottom,10)
-          .padding(.vertical,20)
-          .background(Color.white.opacity(1).blur(radius: 1))
-          .cornerRadius(20, corners: [.bottomLeft, .bottomRight])
-          .offset(y: -25)
-          .zIndex(1)
-
+          
+          Button("Buy Tickets (External)") {
+            if let urlString = item[0].innerembedded?.attractions?[0].url {
+              print("\(String(describing: urlString))")
+              openURL(URL(string: "\(String(describing: urlString))") ?? URL(string: "https://www.ticketmaster.com/")!)
+            }}.frame(width: 300,height: 40)
+            .foregroundColor(Color.white)
+            .background(Color.purple)
+            .fontWeight(.semibold)
+            .cornerRadius(20)
+            .padding(.horizontal,20)
+            .padding(.bottom,0)
+          
         }
-        .padding(.horizontal,0)
-    }
+        .frame(maxWidth: .infinity,maxHeight: .infinity)
+
+        .padding(.bottom,10)
+        .background(Color.white.opacity(1).blur(radius: 1))
+        .cornerRadius(20, corners: [.bottomLeft, .bottomRight])
+        .offset(y: -25)
+        .zIndex(1)
+        
+
+    }.clipped()
+      .background(backgroundGradient.ignoresSafeArea())
+      .toolbarBackground(Color(red: 1, green: 0.3157, blue: 0.3333), for: .navigationBar)
+
   }
+
 } 
 
 struct EventView_Previews: PreviewProvider {
@@ -189,3 +244,10 @@ struct RoundedCorner: Shape {
 }
 
 // Custom corner radius implementation ends
+
+struct ViewHeightKey: PreferenceKey {
+    static var defaultValue: CGFloat { 0 }
+    static func reduce(value: inout Value, nextValue: () -> Value) {
+        value = value + nextValue()
+    }
+}

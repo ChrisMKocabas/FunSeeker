@@ -88,9 +88,25 @@ struct FavouriteDetailView: View {
             }
           }
           VStack(alignment: .center, spacing: 10){
-            Text(item.name)
-            Text(item.innerembedded?.venues[0].name ?? "")
-            Text(item.dates.start.localDate)
+            Text("\(item.name)").font(Font.headline.weight(.bold))
+            HStack{
+              Text("@").fontWeight(.bold)
+              Text(item.innerembedded?.venues[0].name ?? "")
+            }
+            HStack{
+              Text("Date: ").fontWeight(.bold)
+              Text(item.dates.start.localDate)
+              Text("Time: ").fontWeight(.bold)
+              Text(item.dates.start.localTime ?? "TBA")
+            }
+            if((item.priceRanges?[0].min) != nil && (item.priceRanges?[0].min) != 0){
+              HStack{
+                Spacer()
+                Text("Starting from").fontWeight(.bold)
+                Text("$ \(Int((item.priceRanges?[0].min)!)).00")
+                Spacer()
+              }
+            }
           }.foregroundColor(Color.black)
           
         }.overlay(

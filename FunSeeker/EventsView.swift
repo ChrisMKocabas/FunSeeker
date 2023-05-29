@@ -15,6 +15,8 @@ struct EventsView: View {
   @State private var searchText = ""
   @State private var filteredEvents = [Event]()
   @State private var toolbarVisibility : Visibility = .hidden
+  @ObservedObject var networkManager:NetworkManager
+  @ObservedObject var localFileManager: LocalFileManager
   
 
   let backgroundGradient = LinearGradient(
@@ -32,43 +34,77 @@ struct EventsView: View {
     VStack{
       ZStack {
         backgroundGradient.ignoresSafeArea()
-        ScrollView(showsIndicators: false){
-//          ZStack{
-//            Image("banner")
-//              .resizable()
-//              .scaledToFill()
-//              .frame(maxWidth: .infinity, maxHeight: 240)
-//              .clipped()
-//              .blur(radius: 15)
-//              .padding(.bottom,20)
-//
-//            Image("banner")
-//              .resizable()
-//              .scaledToFill()
-//              .frame(maxWidth: .infinity, maxHeight: 200)
-//              .clipped()
-//          }
-          LazyVGrid(columns:columns) {
-            ForEach(eventViewModel.events, id:\.self.id) {item in
-              ExtractedView(item:item)
-                .frame(maxWidth: .infinity,idealHeight: 400, maxHeight: 600)
-                .onAppear(perform:{
-                  if eventViewModel.shouldLoadMoreData(id: item.id){
-                    Task{
-                      await eventViewModel.fetchMoreEvents()
+        if (networkManager.isActive == true) {
+          ScrollView(showsIndicators: false){
+            //          ZStack{
+            //            Image("banner")
+            //              .resizable()
+            //              .scaledToFill()
+            //              .frame(maxWidth: .infinity, maxHeight: 240)
+            //              .clipped()
+            //              .blur(radius: 15)
+            //              .padding(.bottom,20)
+            //
+            //            Image("banner")
+            //              .resizable()
+            //              .scaledToFill()
+            //              .frame(maxWidth: .infinity, maxHeight: 200)
+            //              .clipped()
+            //          }
+            LazyVGrid(columns:columns) {
+              ForEach(eventViewModel.events, id:\.self.id) {item in
+                ExtractedView(item:item)
+                  .frame(maxWidth: .infinity,idealHeight: 400, maxHeight: 600)
+                  .onAppear(perform:{
+                    if eventViewModel.shouldLoadMoreData(id: item.id){
+                      Task{
+                        await eventViewModel.fetchMoreEvents()
+                      }
                     }
-                  }
-                })
-            } .overlay(
-              RoundedRectangle(cornerRadius: 30)
-                .stroke(Color.white, lineWidth:1)
-          )
+                  })
+              } .overlay(
+                RoundedRectangle(cornerRadius: 30)
+                  .stroke(Color.white, lineWidth:1)
+              )
               .padding(10)
+            }
+
+          }.refreshable {
+            print("Hello world")
           }
-        }
-        .onAppear(){
-          Task{
-            await eventViewModel.getData()
+          .onAppear(){
+            Task{
+              if eventViewModel.events.isEmpty && networkManager.isActive {
+                await eventViewModel.getData()
+                localFileManager.loadOfflineEvents(eventType: .mainfeed)
+              }
+
+            }
+          }
+          .onChange(of: eventViewModel.events) { newValue in
+            Task {
+              localFileManager.saveEventFeed(events: newValue)
+              localFileManager.loadOfflineEvents(eventType: .mainfeed)
+            }
+          }
+
+        } else {
+          ScrollView(showsIndicators: false){
+
+            LazyVGrid(columns:columns) {
+
+              Text("No internet connection.")
+              ForEach(localFileManager.offlineEvents, id:\.self.id) {item in
+                ExtractedView(item:item)
+                  .frame(maxWidth: .infinity,idealHeight: 400, maxHeight: 600)
+              } .overlay(
+                RoundedRectangle(cornerRadius: 30)
+                  .stroke(Color.white, lineWidth:1)
+              )
+              .padding(10)
+
+            }
+
           }
         }
       }
@@ -84,10 +120,6 @@ struct EventsView: View {
                 .padding()
             }
           }
-//          .navigationDestination(for: Event.self, destination: { item in
-//            EventView(eventViewModel:eventViewModel, firestoreManager:firestoreManager, item:[item])
-//              .navigationBarTitleDisplayMode (.inline)
-//          })
         }
       }
         .onChange(of: searchText) { value in
@@ -113,9 +145,9 @@ struct EventsView: View {
    }.navigationDestination(for: Event.self, destination: { item in
      EventView(eventViewModel:eventViewModel, firestoreManager:firestoreManager, item:[item])
        .navigationBarTitleDisplayMode (.inline)
-       .transaction {
-         $0.animation = .default.speed(1.5)
-       }
+//       .transaction {
+//         $0.animation = .default.speed(4)
+//       }
    })
   }
 }
@@ -123,7 +155,7 @@ struct EventsView: View {
 struct EventsView_Previews: PreviewProvider {
   static var previews: some View {
     NavigationStack{
-      EventsView(eventViewModel: EventViewModel(),firestoreManager: FirestoreManager())
+      EventsView(eventViewModel: EventViewModel(),firestoreManager: FirestoreManager(),networkManager: NetworkManager(), localFileManager: LocalFileManager())
     }
     
   }
@@ -175,11 +207,31 @@ struct ExtractedView: View {
             .stroke(Color.white, lineWidth:2)
       )
         Spacer()
-        VStack(alignment: .center, spacing: 10){
-          Text(item.name)
-          Text(item.innerembedded?.venues[0].name ?? "")
-          Text(item.dates.start.localDate)
+        VStack(alignment: .leading, spacing: 10){
+          Text(item.name).multilineTextAlignment(.leading).fontWeight(.bold)
+          HStack{
+            Text("Venue: ").fontWeight(.bold)
+            Text(item.innerembedded?.venues[0].name ?? "")
+            Spacer()
+          }
+          HStack{
+            Text("Date: ").fontWeight(.bold)
+            Text(item.dates.start.localDate)
+            Spacer()
+          }
+          if((item.priceRanges?[0].min) != nil && (item.priceRanges?[0].min) != 0){
+            HStack{
+              Text("Price range:").fontWeight(.bold)
+              Text("$"+String(item.priceRanges?[0].min ?? 0))
+              Text("-")
+              Text("$"+String(item.priceRanges?[0].max ?? 0))
+              Spacer()
+            }
+          }
+            
         }.foregroundColor(Color.black)
+          .padding()
+        
         Spacer()
       }.background(Color.white.opacity(0.5))
         .cornerRadius(30, corners: .allCorners)
