@@ -40,20 +40,32 @@ struct AuthenticatedView<Content, Unauthenticated>: View where Content: View, Un
     self.content = content
   }
 
+  let backgroundGradient = LinearGradient(
+      colors: [Color.pink, Color.yellow],
+      startPoint: .top, endPoint: .bottom)
+
 
   var body: some View {
     switch viewModel.authenticationState {
     case .unauthenticated, .authenticating:
-      VStack {
-        if let unauthenticated {
-          unauthenticated
-        }
-        else {
-          Text("You're not logged in.")
-        }
-        Button("Tap here to log in") {
-          viewModel.reset()
-          presentingLoginScreen.toggle()
+      ZStack{
+        backgroundGradient.ignoresSafeArea().opacity(1)
+        VStack {
+          Image("app-logo")
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(minHeight: 300, maxHeight: 400)
+          if let unauthenticated {
+            unauthenticated
+          }
+          else {
+            Text("You're not logged in.")  .font(.system(size: 20, weight: .heavy, design: .rounded))
+          }
+          Button("Tap here to log in") {
+            viewModel.reset()
+            presentingLoginScreen.toggle()
+          } .foregroundColor(.white)
+            .font(.system(size: 20, weight: .heavy, design: .rounded))
         }
       }
       .sheet(isPresented: $presentingLoginScreen) {
