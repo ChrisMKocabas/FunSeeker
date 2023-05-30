@@ -12,7 +12,7 @@ import FirebaseAuth
 struct SavedEventsView: View {
   @Environment(\.managedObjectContext) private var viewContext
   @ObservedObject var eventViewModel: EventViewModel
-  @ObservedObject var firestoreManager: FirestoreManager
+  @ObservedObject var savedEventsViewModel: SavedEventsViewModel
   
   @FetchRequest(
     sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
@@ -31,9 +31,9 @@ struct SavedEventsView: View {
       VStack {
         ZStack{
           backgroundGradient.ignoresSafeArea()
-        if (firestoreManager.userEvents.count>0) {
+        if (savedEventsViewModel.userEvents.count>0) {
           List{
-            ForEach(filtering ? filteredEvents : firestoreManager.userEvents, id:\.self.id) {item in
+            ForEach(filtering ? filteredEvents : savedEventsViewModel.userEvents, id:\.self.id) {item in
 
               Section{
 
@@ -96,7 +96,7 @@ struct SavedEventsView: View {
           .background(backgroundGradient.edgesIgnoringSafeArea(.all))
 
           .navigationDestination(for: Event.self, destination: { item in
-            EventView(eventViewModel:eventViewModel, firestoreManager: firestoreManager, item:[item])
+            EventView(eventViewModel:eventViewModel, savedEventsViewModel: savedEventsViewModel, favouritesViewModel: FavouritesViewModel(), item:[item])
           })
           .frame( maxWidth: .infinity)
           .edgesIgnoringSafeArea(.horizontal)
@@ -109,7 +109,7 @@ struct SavedEventsView: View {
     }
     .onAppear(){
       Task{
-        await firestoreManager.fetchUserEvents()
+        await savedEventsViewModel.fetchUserEvents()
       }
     }
     .toolbar {
@@ -131,7 +131,7 @@ struct SavedEventsView: View {
       
       // Remove each item at the selected indexes from the userPhotos array
       for index in sortedIndexes.reversed() {
-        event = firestoreManager.userEvents.remove(at: index)
+        event = savedEventsViewModel.userEvents.remove(at: index)
       }
       print("\(event!.id)")
       
@@ -161,7 +161,7 @@ struct SavedEventsView: View {
 struct SavedEventsView_Previews: PreviewProvider {
   static var previews: some View {
     NavigationStack{
-      SavedEventsView(eventViewModel: EventViewModel(),firestoreManager: FirestoreManager())
+      SavedEventsView(eventViewModel: EventViewModel(),savedEventsViewModel: SavedEventsViewModel())
     }
   }
 }

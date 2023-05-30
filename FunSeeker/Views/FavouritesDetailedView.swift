@@ -10,7 +10,7 @@ import SwiftUI
 struct FavouritesDetailedView: View {
 
   @ObservedObject var eventViewModel: EventViewModel
-  @ObservedObject var firestoreManager : FirestoreManager
+  @ObservedObject var favouritesViewModel: FavouritesViewModel
   @State var favouriteEvent: [Event]
 
   let columns:[GridItem] = [
@@ -50,7 +50,7 @@ struct FavouritesDetailedView_Previews: PreviewProvider {
   @Binding var parentNavigation:Bool 
 
     static var previews: some View {
-      FavouritesDetailedView(eventViewModel: EventViewModel(), firestoreManager: FirestoreManager(), favouriteEvent:PreviewEvents.load(name: "events"))
+      FavouritesDetailedView(eventViewModel: EventViewModel(), favouritesViewModel:FavouritesViewModel(), favouriteEvent:PreviewEvents.load(name: "events"))
     }
 }
 

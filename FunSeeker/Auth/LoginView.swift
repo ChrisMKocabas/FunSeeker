@@ -30,6 +30,11 @@ struct LoginView: View {
 
   @FocusState private var focus: FocusableField?
 
+  let backgroundGradient = LinearGradient(
+      colors: [Color.pink, Color.yellow],
+      startPoint: .top, endPoint: .bottom)
+
+
   private func signInWithEmailPassword() {
     Task {
       if await viewModel.signInWithEmailPassword() == true {
@@ -44,16 +49,21 @@ struct LoginView: View {
     }
   }
 
+  
+
   var body: some View {
+
     VStack {
-      Image("Login")
+      Image("app-logo")
         .resizable()
         .aspectRatio(contentMode: .fit)
         .frame(minHeight: 300, maxHeight: 400)
       Text("Login")
         .font(.largeTitle)
-        .fontWeight(.bold)
+        .fontWeight(.heavy)
+        .fontDesign(.rounded)
         .frame(maxWidth: .infinity, alignment: .leading)
+
 
       HStack {
         SwiftUI.Image(systemName: "at")
@@ -130,6 +140,7 @@ struct LoginView: View {
     .listStyle(.plain)
     .padding()
     .analyticsScreen(name: "\(Self.self)")
+    .background(backgroundGradient.ignoresSafeArea().opacity(0.5))
   }
 
 }

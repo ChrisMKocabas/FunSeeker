@@ -34,13 +34,14 @@ struct SignupView: View {
 
   var body: some View {
     VStack {
-      Image("SignUp")
+      Image("app-logo")
         .resizable()
         .aspectRatio(contentMode: .fit)
         .frame(minHeight: 300, maxHeight: 400)
       Text("Sign up")
         .font(.largeTitle)
-        .fontWeight(.bold)
+        .fontWeight(.heavy)
+        .fontDesign(.rounded)
         .frame(maxWidth: .infinity, alignment: .leading)
 
       HStack {
@@ -122,6 +123,7 @@ struct SignupView: View {
     }
     .listStyle(.plain)
     .padding()
+    .background(backgroundGradient.ignoresSafeArea().opacity(0.5))
     .analyticsScreen(name: "\(Self.self)")
   }
     

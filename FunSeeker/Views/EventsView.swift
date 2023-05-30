@@ -11,7 +11,8 @@ import SwiftUI
 struct EventsView: View {
 
   @ObservedObject var eventViewModel: EventViewModel
-  @ObservedObject var firestoreManager: FirestoreManager
+  @ObservedObject var savedEventsViewModel: SavedEventsViewModel
+  @ObservedObject var favouritesViewModel: FavouritesViewModel
   @State private var searchText = ""
   @State private var filteredEvents = [Event]()
   @State private var toolbarVisibility : Visibility = .hidden
@@ -36,21 +37,6 @@ struct EventsView: View {
         backgroundGradient.ignoresSafeArea()
         if (networkManager.isActive == true) {
           ScrollView(showsIndicators: false){
-            //          ZStack{
-            //            Image("banner")
-            //              .resizable()
-            //              .scaledToFill()
-            //              .frame(maxWidth: .infinity, maxHeight: 240)
-            //              .clipped()
-            //              .blur(radius: 15)
-            //              .padding(.bottom,20)
-            //
-            //            Image("banner")
-            //              .resizable()
-            //              .scaledToFill()
-            //              .frame(maxWidth: .infinity, maxHeight: 200)
-            //              .clipped()
-            //          }
             LazyVGrid(columns:columns) {
               ForEach(eventViewModel.events, id:\.self.id) {item in
                 ExtractedView(item:item)
@@ -143,7 +129,7 @@ struct EventsView: View {
       
 
    }.navigationDestination(for: Event.self, destination: { item in
-     EventView(eventViewModel:eventViewModel, firestoreManager:firestoreManager, item:[item])
+     EventView(eventViewModel:eventViewModel, savedEventsViewModel:savedEventsViewModel,favouritesViewModel:favouritesViewModel, item:[item])
        .navigationBarTitleDisplayMode (.inline)
 //       .transaction {
 //         $0.animation = .default.speed(4)
@@ -155,7 +141,8 @@ struct EventsView: View {
 struct EventsView_Previews: PreviewProvider {
   static var previews: some View {
     NavigationStack{
-      EventsView(eventViewModel: EventViewModel(),firestoreManager: FirestoreManager(),networkManager: NetworkManager(), localFileManager: LocalFileManager())
+      EventsView(eventViewModel: EventViewModel(),savedEventsViewModel: SavedEventsViewModel(), favouritesViewModel: FavouritesViewModel()
+                 ,networkManager: NetworkManager(), localFileManager: LocalFileManager())
     }
     
   }
@@ -209,9 +196,9 @@ struct ExtractedView: View {
         Spacer()
         VStack(alignment: .leading, spacing: 10){
           Text(item.name).multilineTextAlignment(.leading).fontWeight(.bold)
-          HStack{
+          HStack(alignment: .top){
             Text("Venue: ").fontWeight(.bold)
-            Text(item.innerembedded?.venues[0].name ?? "")
+            Text("\(item.innerembedded?.venues[0].name ?? "") \(item.innerembedded?.venues[0].city.name ?? "")")
             Spacer()
           }
           HStack{

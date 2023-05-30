@@ -11,7 +11,8 @@ import CoreData
 struct ContentView: View {
   @Environment(\.managedObjectContext) private var viewContext
   @StateObject var eventViewModel = EventViewModel()
-  @StateObject var firestoreManager = FirestoreManager()
+  @StateObject var savedEventsViewModel = SavedEventsViewModel()
+  @StateObject var favouritesViewModel = FavouritesViewModel()
   @EnvironmentObject var presentingProfileScreen: ProfileScreenState
   
   @StateObject var networkManager = NetworkManager()
@@ -31,14 +32,20 @@ struct ContentView: View {
 
     TabView(selection:$sharedInformation.currentTab) {
           NavigationStack{
-            EventsView(eventViewModel:eventViewModel, firestoreManager:firestoreManager, networkManager:networkManager,localFileManager:localFileManager)
+            EventsView(eventViewModel:eventViewModel, savedEventsViewModel:savedEventsViewModel, favouritesViewModel:favouritesViewModel, networkManager:networkManager,localFileManager:localFileManager)
               .toolbar{
                 ToolbarItem(placement: .navigationBarLeading) {
                   Text("\(navbarTitles[sharedInformation.currentTab])")
                     .font(.system(size: 20, weight: .heavy, design: .rounded))
                     .foregroundColor(Color.black)
-               
-
+                }
+                ToolbarItem(placement: .navigationBarTrailing){
+                  Image("app-logo")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(maxWidth: 150, maxHeight: 80, alignment:.top)
+                    .clipped()
+                    .opacity(0.2)
                 }
               }
               .toolbarBackground(Color(red: 1, green: 0.3157, blue: 0.3333), for: .navigationBar)
@@ -52,7 +59,7 @@ struct ContentView: View {
 
 
           NavigationStack{
-            FavouriteEventsView(eventViewModel:eventViewModel, firestoreManager: firestoreManager)
+            FavouriteEventsView(eventViewModel:eventViewModel, favouritesViewModel: favouritesViewModel, savedEventsViewModel: savedEventsViewModel)
               .toolbar{
                 ToolbarItem(placement: .navigationBarLeading) {
                   Text("\(navbarTitles[sharedInformation.currentTab])")
@@ -66,7 +73,7 @@ struct ContentView: View {
             .toolbarBackground(Color(red: 0.9529, green: 0.7176, blue: 0.2431), for: .tabBar)
 
           NavigationStack{
-            SavedEventsView(eventViewModel:eventViewModel, firestoreManager:firestoreManager)
+            SavedEventsView(eventViewModel:eventViewModel, savedEventsViewModel:savedEventsViewModel)
               .toolbar{
                 ToolbarItem(placement: .navigationBarLeading) {
                   Text("\(navbarTitles[sharedInformation.currentTab])")
@@ -86,6 +93,7 @@ struct ContentView: View {
                   Text("\(navbarTitles[sharedInformation.currentTab])")
                     .font(.system(size: 20, weight: .heavy, design: .rounded))
                 }
+
               }
           }
             .tabItem {

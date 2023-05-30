@@ -10,7 +10,8 @@ import SwiftUI
 struct FavouriteEventsView: View {
 
   @ObservedObject var eventViewModel: EventViewModel
-  @ObservedObject var firestoreManager : FirestoreManager
+  @ObservedObject var favouritesViewModel : FavouritesViewModel
+  @ObservedObject var savedEventsViewModel : SavedEventsViewModel
 
   func getPercentage(geo: GeometryProxy) -> Double {
     let maxDistance = UIScreen.main.bounds.width / 2
@@ -30,7 +31,7 @@ struct FavouriteEventsView: View {
 
           ScrollView(.horizontal, showsIndicators: false, content: {
             HStack {
-              ForEach(firestoreManager.favouriteEvents) { event in
+              ForEach(favouritesViewModel.favouriteEvents) { event in
                 NavigationLink(value: event) {
                   GeometryReader { geometry in
                       VStack(alignment: .center){
@@ -39,7 +40,7 @@ struct FavouriteEventsView: View {
                           Spacer()
                           Button(action: {
                             Task{
-                              await firestoreManager.removeFromFavourites(event: event)
+                              await favouritesViewModel.removeFromFavourites(event: event)
                             }
                           }, label: {
                             Image(systemName: "xmark")
@@ -102,14 +103,14 @@ struct FavouriteEventsView: View {
             }
           })
         }.navigationDestination(for: Event.self, destination: { item in
-            FavouritesDetailedView(eventViewModel:eventViewModel, firestoreManager:firestoreManager, favouriteEvent:[item])
+          FavouritesDetailedView(eventViewModel:eventViewModel,favouritesViewModel:favouritesViewModel, favouriteEvent:[item])
               .navigationBarTitleDisplayMode (.inline)
               .toolbarBackground(Color(red: 1, green: 0.3157, blue: 0.3333), for: .navigationBar)
 
           }
         )
         .navigationDestination(for: [Event].self, destination: { item in
-            EventView(eventViewModel:eventViewModel, firestoreManager:firestoreManager, item:item)
+          EventView(eventViewModel:eventViewModel,savedEventsViewModel:savedEventsViewModel, favouritesViewModel:favouritesViewModel, item:item)
             .navigationBarTitleDisplayMode (.inline)
             .toolbarBackground(Color(red: 1, green: 0.3157, blue: 0.3333), for: .navigationBar)
         })
@@ -117,8 +118,7 @@ struct FavouriteEventsView: View {
 
       }.onAppear(perform:{
             Task{
-//              await eventViewModel.getData()
-              await firestoreManager.fetchUserFavourites()
+              await favouritesViewModel.fetchUserFavourites()
             }
         })
         
@@ -129,7 +129,7 @@ struct FavouriteEventsView: View {
 
 struct FavouriteEventsView_Previews: PreviewProvider {
     static var previews: some View {
-      FavouriteEventsView(eventViewModel: EventViewModel(), firestoreManager: FirestoreManager())
+      FavouriteEventsView(eventViewModel: EventViewModel(), favouritesViewModel: FavouritesViewModel(), savedEventsViewModel: SavedEventsViewModel())
     }
 }
 

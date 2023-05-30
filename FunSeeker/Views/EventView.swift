@@ -16,7 +16,8 @@ struct EventView: View {
   @Environment(\.presentationMode) var presentationMode
   @EnvironmentObject var sharedInformation:SharedInfo
   @ObservedObject var eventViewModel: EventViewModel
-  @ObservedObject var firestoreManager: FirestoreManager
+  @ObservedObject var savedEventsViewModel: SavedEventsViewModel
+  @ObservedObject var favouritesViewModel: FavouritesViewModel
 
   @State var isExpanded = false
   @State var subviewHeight : CGFloat = 0
@@ -24,15 +25,15 @@ struct EventView: View {
   let item:[Event]
 
   private func saveEvent() async{
-    await firestoreManager.saveToFirebase(event: item[0])
+    await savedEventsViewModel.saveToFirebase(event: item[0])
   }
 
   private func saveToFavourites() async{
-    await firestoreManager.saveFavourite(event: item[0])
+    await favouritesViewModel.saveFavourite(event: item[0])
   }
 
   private func removeSavedEvent() async {
-    await firestoreManager.removeSavedEvent(event: item[0])
+    await savedEventsViewModel.removeSavedEvent(event: item[0])
   }
 
   let backgroundGradient = LinearGradient(
@@ -191,7 +192,9 @@ struct EventView: View {
             if let urlString = item[0].innerembedded?.attractions?[0].url {
               print("\(String(describing: urlString))")
               openURL(URL(string: "\(String(describing: urlString))") ?? URL(string: "https://www.ticketmaster.com/")!)
-            }}.frame(width: 300,height: 40)
+            }else {toast("Not available",size: .large)}
+
+          }.frame(width: 300,height: 40)
             .foregroundColor(Color.white)
             .background(Color.purple)
             .fontWeight(.semibold)
@@ -219,7 +222,7 @@ struct EventView: View {
 
 struct EventView_Previews: PreviewProvider {
     static var previews: some View {
-      EventView(eventViewModel: EventViewModel(), firestoreManager: FirestoreManager(), item:PreviewEvents.load(name: "events") ).environmentObject(SharedInfo())
+      EventView(eventViewModel: EventViewModel(), savedEventsViewModel: SavedEventsViewModel(), favouritesViewModel: FavouritesViewModel(), item:PreviewEvents.load(name: "events") ).environmentObject(SharedInfo())
     }
 }
 
@@ -251,3 +254,4 @@ struct ViewHeightKey: PreferenceKey {
         value = value + nextValue()
     }
 }
+

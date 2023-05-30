@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0461E9B02A257E8A00570E52 /* Toast+UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0461E9AF2A257E8A00570E52 /* Toast+UIViewExtension.swift */; };
+		0461E9B22A257EEB00570E52 /* EventViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0461E9B12A257EEB00570E52 /* EventViewModel.swift */; };
+		0461E9B62A2580F700570E52 /* FavouritesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0461E9B52A2580F700570E52 /* FavouritesViewModel.swift */; };
 		0468B22A29E37EA20021E8C5 /* FunSeekerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0468B22929E37EA20021E8C5 /* FunSeekerApp.swift */; };
 		0468B22C29E37EA20021E8C5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0468B22B29E37EA20021E8C5 /* ContentView.swift */; };
 		0468B22E29E37EA30021E8C5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0468B22D29E37EA30021E8C5 /* Assets.xcassets */; };
@@ -39,7 +42,7 @@
 		04FCEC5129F1AFF100D8A058 /* EventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FCEC5029F1AFF100D8A058 /* EventView.swift */; };
 		04FCEC5529F1D01D00D8A058 /* events.json in Resources */ = {isa = PBXBuildFile; fileRef = 04FCEC5429F1D01D00D8A058 /* events.json */; };
 		04FCEC5729F1D11F00D8A058 /* PreviewEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FCEC5629F1D11F00D8A058 /* PreviewEvents.swift */; };
-		04FCEC5929F217AB00D8A058 /* FireStoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FCEC5829F217AB00D8A058 /* FireStoreManager.swift */; };
+		04FCEC5929F217AB00D8A058 /* SavedEventsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FCEC5829F217AB00D8A058 /* SavedEventsViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +63,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0461E9AF2A257E8A00570E52 /* Toast+UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Toast+UIViewExtension.swift"; sourceTree = "<group>"; };
+		0461E9B12A257EEB00570E52 /* EventViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewModel.swift; sourceTree = "<group>"; };
+		0461E9B52A2580F700570E52 /* FavouritesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesViewModel.swift; sourceTree = "<group>"; };
 		0468B22629E37EA20021E8C5 /* FunSeeker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FunSeeker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0468B22929E37EA20021E8C5 /* FunSeekerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunSeekerApp.swift; sourceTree = "<group>"; };
 		0468B22B29E37EA20021E8C5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -89,7 +95,7 @@
 		04FCEC5029F1AFF100D8A058 /* EventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
 		04FCEC5429F1D01D00D8A058 /* events.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = events.json; sourceTree = "<group>"; };
 		04FCEC5629F1D11F00D8A058 /* PreviewEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewEvents.swift; sourceTree = "<group>"; };
-		04FCEC5829F217AB00D8A058 /* FireStoreManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FireStoreManager.swift; sourceTree = "<group>"; };
+		04FCEC5829F217AB00D8A058 /* SavedEventsViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavedEventsViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +129,55 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0461E9AE2A257E4200570E52 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				0461E9AF2A257E8A00570E52 /* Toast+UIViewExtension.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		0461E9B32A257FD500570E52 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				04FCEC5829F217AB00D8A058 /* SavedEventsViewModel.swift */,
+				0461E9B52A2580F700570E52 /* FavouritesViewModel.swift */,
+				0461E9B12A257EEB00570E52 /* EventViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		0461E9B42A257FF600570E52 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				0468B23229E37EA30021E8C5 /* Persistence.swift */,
+				04A7760A2A20257200B90696 /* Network Manager.swift */,
+				04F14F0B2A21138000111588 /* LocalFileManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		0461E9B72A259E3000570E52 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				0468B22B29E37EA20021E8C5 /* ContentView.swift */,
+				04D20BAE29F044B300490E87 /* EventsView.swift */,
+				04D20BB029F044DE00490E87 /* FavouriteEventsView.swift */,
+				04B8622B2A19A23E00711B49 /* FavouritesDetailedView.swift */,
+				04D20BB229F044EE00490E87 /* SavedEventsView.swift */,
+				04FCEC5029F1AFF100D8A058 /* EventView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		0461E9B82A259E6700570E52 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				0493627429E3BE3E0088F846 /* EventModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		0468B21D29E37EA20021E8C5 = {
 			isa = PBXGroup;
 			children = (
@@ -147,21 +202,15 @@
 		0468B22829E37EA20021E8C5 /* FunSeeker */ = {
 			isa = PBXGroup;
 			children = (
+				0461E9B82A259E6700570E52 /* Models */,
+				0461E9B72A259E3000570E52 /* Views */,
+				0461E9B42A257FF600570E52 /* Managers */,
+				0461E9B32A257FD500570E52 /* ViewModels */,
+				0461E9AE2A257E4200570E52 /* Extensions */,
 				04F6D07129E4E6C500A341D0 /* Auth */,
 				0468B22929E37EA20021E8C5 /* FunSeekerApp.swift */,
-				0468B22B29E37EA20021E8C5 /* ContentView.swift */,
-				04D20BAE29F044B300490E87 /* EventsView.swift */,
-				04FCEC5829F217AB00D8A058 /* FireStoreManager.swift */,
-				04FCEC5029F1AFF100D8A058 /* EventView.swift */,
-				04A7760A2A20257200B90696 /* Network Manager.swift */,
-				04F14F0B2A21138000111588 /* LocalFileManager.swift */,
-				04D20BB029F044DE00490E87 /* FavouriteEventsView.swift */,
-				04B8622B2A19A23E00711B49 /* FavouritesDetailedView.swift */,
-				04D20BB229F044EE00490E87 /* SavedEventsView.swift */,
 				0468B22D29E37EA30021E8C5 /* Assets.xcassets */,
-				0493627429E3BE3E0088F846 /* EventModel.swift */,
 				04B5996A2A16F4EA008381A3 /* GoogleService-Info.plist */,
-				0468B23229E37EA30021E8C5 /* Persistence.swift */,
 				0468B23429E37EA30021E8C5 /* FunSeeker.xcdatamodeld */,
 				0468B22F29E37EA30021E8C5 /* Preview Content */,
 			);
@@ -361,15 +410,18 @@
 				0493627529E3BE3E0088F846 /* EventModel.swift in Sources */,
 				04D20BB329F044EE00490E87 /* SavedEventsView.swift in Sources */,
 				0468B23329E37EA30021E8C5 /* Persistence.swift in Sources */,
+				0461E9B22A257EEB00570E52 /* EventViewModel.swift in Sources */,
 				04D20BB129F044DE00490E87 /* FavouriteEventsView.swift in Sources */,
 				04F6D07D29E4E6C500A341D0 /* AuthenticationViewModel.swift in Sources */,
 				04FCEC5729F1D11F00D8A058 /* PreviewEvents.swift in Sources */,
 				04F6D07A29E4E6C500A341D0 /* AuthenticatedView.swift in Sources */,
+				0461E9B02A257E8A00570E52 /* Toast+UIViewExtension.swift in Sources */,
 				04F14F0C2A21138000111588 /* LocalFileManager.swift in Sources */,
 				0468B22C29E37EA20021E8C5 /* ContentView.swift in Sources */,
 				04F6D07929E4E6C500A341D0 /* UserProfileView.swift in Sources */,
 				04F6D07C29E4E6C500A341D0 /* SignupView.swift in Sources */,
 				04B8622C2A19A23E00711B49 /* FavouritesDetailedView.swift in Sources */,
+				0461E9B62A2580F700570E52 /* FavouritesViewModel.swift in Sources */,
 				04FCEC5129F1AFF100D8A058 /* EventView.swift in Sources */,
 				0468B23629E37EA30021E8C5 /* FunSeeker.xcdatamodeld in Sources */,
 				04F6D07B29E4E6C500A341D0 /* AuthenticationView.swift in Sources */,
@@ -377,7 +429,7 @@
 				04A7760B2A20257200B90696 /* Network Manager.swift in Sources */,
 				0468B22A29E37EA20021E8C5 /* FunSeekerApp.swift in Sources */,
 				04D20BAF29F044B300490E87 /* EventsView.swift in Sources */,
-				04FCEC5929F217AB00D8A058 /* FireStoreManager.swift in Sources */,
+				04FCEC5929F217AB00D8A058 /* SavedEventsViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
