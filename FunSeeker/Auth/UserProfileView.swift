@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PhotosUI
 import Firebase
 import FirebaseCore
 import FirebaseAnalyticsSwift
@@ -30,6 +31,8 @@ struct UserProfileView: View {
   @State var presentingConfirmationDialog = false
   @State var transactionStatus = TransactionType.blank
   @State var showNewScreen: Bool = false
+  @State var selectedPhotos:[PhotosPickerItem] = []
+  @State var profilePicture: String = ""
 
   private func deleteAccount() {
     Task {
@@ -56,82 +59,146 @@ struct UserProfileView: View {
 
   var body: some View {
     ZStack{
-      Form {
-        Section {
-          VStack {
-            HStack {
-              Spacer()
-              Image(systemName: "person.fill")
-                .resizable()
-                .frame(width: 100 , height: 100)
-                .aspectRatio(contentMode: .fit)
-                .clipShape(Circle())
-                .clipped()
-                .padding(4)
-                .overlay(Circle().stroke(Color.accentColor, lineWidth: 2))
-              Spacer()
-            }
-            Button(action: {}) {
-              Text("edit")
-            }
-          }
-        }
-//        .listRowBackground(Color(UIColor.systemGroupedBackground))
-        .listRowBackground(Color.white.opacity(0))
+      VStack{
+        Form {
+          Section {
+            VStack {
+              HStack {
+                Spacer()
+                ZStack(alignment: .bottomTrailing){
+                  AsyncImage(url:URL(string: profilePicture.replacingOccurrences(of: "http://", with: "https://"))) { phase in
+                    switch phase {
+                    case .empty:
+                      Image(systemName: "person.fill")
+                        .resizable()
+                        .frame(width: 150 , height: 150)
+                        .aspectRatio(contentMode: .fit)
+                        .clipShape(Circle())
+                        .clipped()
+                        .padding(4)
+                        .overlay(Circle().stroke(Color.accentColor, lineWidth: 2))
+                    case .success(let image):
+                      image
+                        .resizable()
+                        .frame(width: 150 , height: 150)
+                        .aspectRatio(contentMode: .fit)
+                        .clipShape(Circle())
+                        .clipped()
+                        .padding(4)
+                        .overlay(Circle().stroke(Color.accentColor, lineWidth: 2))
 
-        Section("Email") {
-          Text(viewModel.displayName)
-        }.listRowBackground(Color.white.opacity(0.8))
+                    case .failure(_):
+                      Image(systemName: "person.fill")
+                        .resizable()
+                        .frame(width: 150 , height: 150)
+                        .aspectRatio(contentMode: .fit)
+                        .clipShape(Circle())
+                        .clipped()
+                        .padding(4)
+                        .overlay(Circle().stroke(Color.accentColor, lineWidth: 2))
+                    @unknown default:
+                      EmptyView()
+                    }
+                  }
 
-        Section {
-          Button( action: updatePassword) {
-            HStack {
-              Spacer()
-              Text("Change Password")
-              Spacer()
+                  Image(systemName: "plus")
+                    .foregroundColor(.red)
+                    .frame(width: 40, height: 50)
+                    .background(Color.white)
+                    .fontWeight(.heavy)
+                    .clipShape(Circle())
+                    .overlay(Circle().stroke(Color.orange, lineWidth: 2))
+                }
+                Spacer()
+              }
+              PhotosPicker(selection:$selectedPhotos,maxSelectionCount:1,selectionBehavior: .default, matching: .images,   preferredItemEncoding: .current){
+                Text("")
+              }.onChange(of: selectedPhotos) { newItem in
+                Task{
+
+                  guard let imageData = try? await newItem.first?.loadTransferable(type: Data.self) else { return }
+
+                  await viewModel.uploadProfilePicture(image: imageData)
+
+                  profilePicture = await viewModel.downloadProfilePicture()
+
+
+  //EXPERIMENTAL DO NOT DELETE//
+                  //load image directly into swiftui Image
+  //                profilePicture = try? await newItem.first?.loadTransferable(type: Image.self)
+
+                  //cast image into UIImage for UIKit
+  //                guard let imageData = try? await newItem.first?.loadTransferable(type: Data.self) else { return }
+  //
+  //               self.profilePicture = UIImage(data: imageData)
+                }
+              }
             }
           }
-        }.listRowBackground(Color.white.opacity(0.8))
-        Section {
-          Button( action: updateEmail) {
-            HStack {
-              Spacer()
-              Text("Change Email")
-              Spacer()
+  //        .listRowBackground(Color(UIColor.systemGroupedBackground))
+          .listRowBackground(Color.white.opacity(0))
+          Section("Email") {
+            Text(viewModel.displayName)
+          }.listRowBackground(Color.white.opacity(0.8))
+
+          Section {
+            Button( action: updatePassword) {
+              HStack {
+                Spacer()
+                Text("Change Password")
+                Spacer()
+              }
             }
-          }
-        }.listRowBackground(Color.white.opacity(0.8))
-        Section {
-          Button(role: .cancel, action: signOut) {
-            HStack {
-              Spacer()
-              Text("Sign out")
-              Spacer()
+          }.listRowBackground(Color.white.opacity(0.8))
+          Section {
+            Button( action: updateEmail) {
+              HStack {
+                Spacer()
+                Text("Change Email")
+                Spacer()
+              }
             }
-          }
-        }.listRowBackground(Color.white.opacity(0.8))
-        Section {
-          Button(role: .destructive, action: { presentingConfirmationDialog.toggle() }) {
-            HStack {
-              Spacer()
-              Text("Delete Account")
-              Spacer()
+          }.listRowBackground(Color.white.opacity(0.8))
+          Section {
+            Button(role: .cancel, action: signOut) {
+              HStack {
+                Spacer()
+                Text("Sign out")
+                Spacer()
+              }
             }
-          }
-        }.listRowBackground(Color.white.opacity(0.8))
-      }.scrollContentBackground(.hidden)
-       .foregroundColor(Color.black)
-       .background(backgroundGradient.ignoresSafeArea())
-       .tint(Color.orange)
-      
+          }.listRowBackground(Color.white.opacity(0.8))
+          Section {
+            Button(role: .destructive, action: { presentingConfirmationDialog.toggle() }) {
+              HStack {
+                Spacer()
+                Text("Delete Account")
+                Spacer()
+              }
+            }
+          }.listRowBackground(Color.white.opacity(0.8))
+        }.scrollContentBackground(.hidden)
+          .foregroundColor(Color.black)
+          .background(backgroundGradient.ignoresSafeArea())
+          .tint(Color.orange)
+      }
 
       ZStack {
         NewScreen(showNewScreen: $showNewScreen, transactionStatus: $transactionStatus)
+          .cornerRadius(30, corners: .allCorners)
+          .overlay(
+            RoundedRectangle(cornerRadius: 30)
+              .stroke(Color.orange, lineWidth:2)
+          )
           .padding(.top, 100)
           .opacity(showNewScreen ? 1 : 0)
           .animation(.spring(response:0.55, dampingFraction: 0.7,
                             blendDuration: 0), value: showNewScreen)
           .offset(y: showNewScreen ? 0 : UIScreen.main.bounds.height)
+      }
+    }.onAppear(){Task
+      {
+      profilePicture = await viewModel.downloadProfilePicture()
       }
     }
     .navigationBarTitleDisplayMode(.inline)
@@ -190,11 +257,9 @@ struct NewScreen: View {
 
     var body: some View {
         ZStack(alignment: .topLeading) {
-          Color(UIColor(red: 0.93, green: 0.94, blue: 0.95, alpha: 0.9))
-                .edgesIgnoringSafeArea(.all)
           backgroundGradient
-            .edgesIgnoringSafeArea(.all).opacity(0.7)
-
+            .edgesIgnoringSafeArea(.all).opacity(0.95)
+          Color.gray.edgesIgnoringSafeArea(.all).opacity(0.2)
             Button(action: {
               //presentationMode.wrappedValue.dismiss()
               showNewScreen.toggle()
@@ -289,5 +354,6 @@ struct NewScreen: View {
           }.padding(EdgeInsets(top: 80, leading: 10, bottom: 10, trailing: 10))
 
         }
+
     }
 }

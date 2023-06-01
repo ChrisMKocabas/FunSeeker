@@ -11,6 +11,7 @@ import FirebaseCore
 import FirebaseAnalyticsSwift
 import FirebaseAuth
 import Combine
+import FirebaseStorage
 
 struct AuthDataResultModel {
     let uid: String
@@ -218,4 +219,68 @@ extension AuthenticationViewModel {
 
   }
 
+  func uploadProfilePicture(image: Data) async {
+    print("Saving image to firestore")
+    let db = Firestore.firestore()
+    let storage = Storage.storage()
+
+    guard let currentUser = Auth.auth().currentUser else {
+      print("no user signed in")
+      // No user is currently signed in
+      return
+    }
+
+    // Get a reference to the user's document
+    let userDocRef = db.collection("users").document(currentUser.uid)
+    let profilePictureDocRef = userDocRef.collection("profile").document("picture")
+
+    let photoRef = storage.reference(withPath: "\(currentUser.uid.description)/profile/picture.jpg")
+
+      do {
+        let upladedImage = try await photoRef.putDataAsync(image)
+        let downloadUrl = try await photoRef.downloadURL()
+        let _ = try await profilePictureDocRef.setData(["download_url":downloadUrl.absoluteString])
+      }
+      catch{
+        print("\(error)")
+      }
+
+   
+
+  }
+
+  func downloadProfilePicture() async -> String {
+
+    print("Getting profile picture")
+    let db = Firestore.firestore()
+    let storage = Storage.storage()
+
+    guard let currentUser = Auth.auth().currentUser else {
+      print("no user signed in")
+      // No user is currently signed in
+      return ""
+    }
+
+    // Get a reference to the user's document
+    let userDocRef = db.collection("users").document(currentUser.uid)
+    let profilePictureDocRef = userDocRef.collection("profile").document("picture")
+    do {
+      let snapshot = try await profilePictureDocRef.getDocument()
+      let jsonData = try JSONSerialization.data(withJSONObject: snapshot.data(), options: [])
+      let model = try JSONDecoder().decode(ProfilePicture.self, from: jsonData)
+      print(model)
+      return model.download_url
+    } catch {
+      print("Error decoding document: \(error.localizedDescription)")
+      return ""
+    }
+
+  }
+
+
+
+}
+
+struct ProfilePicture:Codable {
+  let download_url:String
 }
