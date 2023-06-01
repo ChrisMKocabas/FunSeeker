@@ -111,7 +111,7 @@ struct EventView: View {
             VStack {
               Text("Additional info:").fontWeight(.bold)
               if ((item.first?.info) != nil) {Text("Tap to expand").foregroundColor(Color.gray)}
-              Text(item.first?.info ?? "").lineLimit(15,reservesSpace: true)
+              Text(item.first?.info ?? "").lineLimit((item.first?.info?.count ?? 30)/30,reservesSpace: true)
               HStack{
                 Text((item[0].innerembedded?.venues[0].ada?.adaPhones ?? "").replacingOccurrences(of: "Ticketmaster:", with: "Contact:")).lineLimit(3,reservesSpace: true)
                 Spacer()
@@ -123,7 +123,7 @@ struct EventView: View {
                                      value: $0.frame(in: .local).size.height)
             })
             .onPreferenceChange(ViewHeightKey.self) { subviewHeight = $0 }
-            .frame(height: isExpanded ? subviewHeight : 80, alignment: .top)
+            .frame(height: isExpanded ? subviewHeight : 60, alignment: .top)
             .padding()
             .clipped()
             .frame(maxWidth: .infinity)

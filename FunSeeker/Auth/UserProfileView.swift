@@ -196,9 +196,11 @@ struct UserProfileView: View {
                             blendDuration: 0), value: showNewScreen)
           .offset(y: showNewScreen ? 0 : UIScreen.main.bounds.height)
       }
-    }.onAppear(){Task
-      {
-      profilePicture = await viewModel.downloadProfilePicture()
+    }.onAppear(){
+      if profilePicture == ""{
+        Task{
+          profilePicture = await viewModel.downloadProfilePicture()
+        }
       }
     }
     .navigationBarTitleDisplayMode(.inline)

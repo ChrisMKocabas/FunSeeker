@@ -26,6 +26,9 @@ struct AuthDataResultModel {
         self.isAnonymous = user.isAnonymous
     }
 }
+struct ProfilePicture:Codable {
+  let download_url:String
+}
 
 enum AuthenticationState {
   case unauthenticated
@@ -237,7 +240,7 @@ extension AuthenticationViewModel {
     let photoRef = storage.reference(withPath: "\(currentUser.uid.description)/profile/picture.jpg")
 
       do {
-        let upladedImage = try await photoRef.putDataAsync(image)
+        let _ = try await photoRef.putDataAsync(image)
         let downloadUrl = try await photoRef.downloadURL()
         let _ = try await profilePictureDocRef.setData(["download_url":downloadUrl.absoluteString])
       }
@@ -253,7 +256,6 @@ extension AuthenticationViewModel {
 
     print("Getting profile picture")
     let db = Firestore.firestore()
-    let storage = Storage.storage()
 
     guard let currentUser = Auth.auth().currentUser else {
       print("no user signed in")
@@ -266,7 +268,7 @@ extension AuthenticationViewModel {
     let profilePictureDocRef = userDocRef.collection("profile").document("picture")
     do {
       let snapshot = try await profilePictureDocRef.getDocument()
-      let jsonData = try JSONSerialization.data(withJSONObject: snapshot.data(), options: [])
+      let jsonData = try JSONSerialization.data(withJSONObject: snapshot.data() ?? ["download_url":""], options: [])
       let model = try JSONDecoder().decode(ProfilePicture.self, from: jsonData)
       print(model)
       return model.download_url
@@ -281,6 +283,3 @@ extension AuthenticationViewModel {
 
 }
 
-struct ProfilePicture:Codable {
-  let download_url:String
-}
