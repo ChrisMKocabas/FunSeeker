@@ -22,6 +22,7 @@ struct EventsView: View {
   @Namespace var topID
   @Namespace var bottomID
   @State private var scrollPosition: CGPoint = .zero
+  @State private var filtersEnabled = false
 
   let backgroundGradient = LinearGradient(
       colors: [Color.pink, Color.yellow],
@@ -62,53 +63,87 @@ struct EventsView: View {
 
             ZStack(alignment: .bottom){
               ScrollView(showsIndicators: false){
-                VStack{
-                  Text("\(eventViewModel.radius,specifier:"Maximum distance %.f km")").foregroundColor(.black).fontWeight(.bold)
-                  Slider(
-                    value:                              $eventViewModel.radius,
-                    in: minValue...maxValue,
-                    step: 1
-                  ) {
-                    Text("Radius")
-                  } minimumValueLabel: {
-                    Text("\(minValue,specifier: "%.f km")")
-                  } maximumValueLabel: {
-                    Text("\(maxValue,specifier: "%.f km")")
-                  }.padding()
-                    .onChange(of: eventViewModel.radius, perform: { newValue in
-                      Task{
-                        if networkManager.isActive {
-                          await eventViewModel.getData()
-                          localFileManager.loadOfflineEvents(eventType: .mainfeed)
+
+                  VStack{
+                    if (filtersEnabled){
+                      HStack(alignment:.center){
+                        Spacer()
+                        Text("Hide filters").foregroundColor(.black).fontWeight(.medium)
+                        Image(systemName: "chevron.up")
+                        Spacer()
+                      }
+                      .frame(maxWidth:.infinity, maxHeight:.infinity,alignment:.center)
+                      .padding(.top)
+                        .onTapGesture {
+                          Task{
+                            filtersEnabled = false
+                          }
+                        }
+                      Text("\(eventViewModel.radius,specifier:"Maximum distance: %.f km")").font(.system(size: 18, weight: .bold, design: .rounded))
+                        .padding(.top)
+                      Slider(
+                        value:                              $eventViewModel.radius,
+                        in: minValue...maxValue,
+                        step: 1
+                      ) {
+                        Text("Radius")
+                      } minimumValueLabel: {
+                        Text("\(minValue,specifier: "%.f km")")
+                      } maximumValueLabel: {
+                        Text("\(maxValue,specifier: "%.f km")")
+                      }.padding()
+                        .onChange(of: eventViewModel.radius, perform: { newValue in
+                          Task{
+                            if networkManager.isActive {
+                              await eventViewModel.getData()
+                              localFileManager.loadOfflineEvents(eventType: .mainfeed)
+                            }
+                          }
+                        })
+                      Text("Sort events by \(sortby.replacingOccurrences(of: "&sort=", with: "").replacingOccurrences(of: "onSaleStartDate", with: "start of ticket sales "))").font(.system(size: 18, weight: .bold, design: .rounded))
+
+                      Picker("Sortby", selection: $selectedSegmentIndex) {
+                        Text("Date").tag(0)
+                        Text("Distance").tag(1)
+                        Text("Goes Live").tag(2)
+                        Text("None").tag(3)
+                      }
+                      .pickerStyle(.segmented)
+                      .onChange(of: sortby, perform: { newValue in
+                        Task{
+                          eventViewModel.sortby = newValue
+                          eventViewModel.ascdesc = (newValue == "" ?  "" : ",asc")
+                          if networkManager.isActive {
+                            await eventViewModel.getData()
+                            localFileManager.loadOfflineEvents(eventType: .mainfeed)
+                          }
+                        }
+                      })
+                    } else {
+                      HStack(alignment:.center){
+                        Spacer()
+                        Text("Display filters").foregroundColor(.black).fontWeight(.medium)
+                        Image(systemName: "chevron.down")
+                        Spacer()
+                      }
+                      .frame(maxWidth:.infinity, maxHeight:.infinity,alignment:.center)
+                      .padding()
+                        .onTapGesture {
+                          Task{
+                            filtersEnabled = true
+                          }
                         }
                       }
-                    })
-                  Text("Sort events by \(sortby.replacingOccurrences(of: "&sort=", with: "").replacingOccurrences(of: "onSaleStartDate", with: "start of ticket sales "))").foregroundColor(.black).fontWeight(.bold)
 
-                  Picker("Sortby", selection: $selectedSegmentIndex) {
-                    Text("Date").tag(0)
-                    Text("Distance").tag(1)
-                    Text("Goes Live").tag(2)
-                    Text("None").tag(3)
                   }
-                  .pickerStyle(.segmented)
-                  .onChange(of: sortby, perform: { newValue in
-                    Task{
-                      eventViewModel.sortby = newValue
-                      eventViewModel.ascdesc = (newValue == "" ?  "" : ",asc")
-                      if networkManager.isActive {
-                        await eventViewModel.getData()
-                        localFileManager.loadOfflineEvents(eventType: .mainfeed)
-                      }
-                    }
-                  })
 
-                }.padding(.top)
-                  .background(Color.pink.opacity(0.2))
-                  .background(Color.white.opacity(0.7))
-                  .cornerRadius(30, corners: .allCorners)
-                  .padding(.horizontal,8)
-                  .id(topID)
+                    .background(Color.pink.opacity(0.2))
+                    .background(Color.white.opacity(0.7))
+                    .cornerRadius(30, corners: .allCorners)
+                    .padding(.horizontal,8)
+                    .id(topID)
+
+
 
 
                 LazyVGrid(columns:columns) {
@@ -309,7 +344,7 @@ struct ExtractedView: View {
             CountDownTimerView(referenceDate:ISO8601DateFormatter().date(from: item.dates.start.dateTime ?? "2023-06-12T22:30:00Z")!).foregroundColor(.black)
           }.padding(.horizontal,10)
             .padding(.vertical,5)
-            .background(Color.white.opacity(0.8))
+            .background(Color.white.opacity(1))
             .cornerRadius(10, corners: .allCorners)
         }.overlay(
           RoundedRectangle(cornerRadius: 30)
