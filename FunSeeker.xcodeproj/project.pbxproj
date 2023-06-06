@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04095D5B2A293A5B0045CFE0 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04095D5A2A293A5B0045CFE0 /* LocationManager.swift */; };
+		04095D5D2A2989CF0045CFE0 /* Geohash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04095D5C2A2989CF0045CFE0 /* Geohash.swift */; };
 		0461E9B02A257E8A00570E52 /* Toast+UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0461E9AF2A257E8A00570E52 /* Toast+UIViewExtension.swift */; };
 		0461E9B22A257EEB00570E52 /* EventViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0461E9B12A257EEB00570E52 /* EventViewModel.swift */; };
 		0461E9B62A2580F700570E52 /* FavouritesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0461E9B52A2580F700570E52 /* FavouritesViewModel.swift */; };
@@ -40,6 +42,9 @@
 		04E9F8122A27FD84003B0530 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 04E9F8112A27FD84003B0530 /* FirebaseMessaging */; };
 		04E9F8142A27FD84003B0530 /* FirebasePerformance in Frameworks */ = {isa = PBXBuildFile; productRef = 04E9F8132A27FD84003B0530 /* FirebasePerformance */; };
 		04E9F8162A27FD84003B0530 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 04E9F8152A27FD84003B0530 /* FirebaseStorage */; };
+		04F12B9C2A2D3F1A004295BD /* CountdownTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F12B9B2A2D3F1A004295BD /* CountdownTimerView.swift */; };
+		04F12B9E2A2D8F9B004295BD /* BarChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F12B9D2A2D8F9B004295BD /* BarChartView.swift */; };
+		04F12BA02A2EA651004295BD /* TrackableOffsetScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F12B9F2A2EA651004295BD /* TrackableOffsetScrollView.swift */; };
 		04F14F0C2A21138000111588 /* LocalFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F14F0B2A21138000111588 /* LocalFileManager.swift */; };
 		04F6D07829E4E6C500A341D0 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F6D07229E4E6C500A341D0 /* LoginView.swift */; };
 		04F6D07929E4E6C500A341D0 /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F6D07329E4E6C500A341D0 /* UserProfileView.swift */; };
@@ -71,6 +76,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		04095D5A2A293A5B0045CFE0 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		04095D5C2A2989CF0045CFE0 /* Geohash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Geohash.swift; sourceTree = "<group>"; };
 		0461E9AF2A257E8A00570E52 /* Toast+UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Toast+UIViewExtension.swift"; sourceTree = "<group>"; };
 		0461E9B12A257EEB00570E52 /* EventViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewModel.swift; sourceTree = "<group>"; };
 		0461E9B52A2580F700570E52 /* FavouritesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesViewModel.swift; sourceTree = "<group>"; };
@@ -94,6 +101,9 @@
 		04D20BAE29F044B300490E87 /* EventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsView.swift; sourceTree = "<group>"; };
 		04D20BB029F044DE00490E87 /* FavouriteEventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteEventsView.swift; sourceTree = "<group>"; };
 		04D20BB229F044EE00490E87 /* SavedEventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedEventsView.swift; sourceTree = "<group>"; };
+		04F12B9B2A2D3F1A004295BD /* CountdownTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownTimerView.swift; sourceTree = "<group>"; };
+		04F12B9D2A2D8F9B004295BD /* BarChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarChartView.swift; sourceTree = "<group>"; };
+		04F12B9F2A2EA651004295BD /* TrackableOffsetScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackableOffsetScrollView.swift; sourceTree = "<group>"; };
 		04F14F0B2A21138000111588 /* LocalFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFileManager.swift; sourceTree = "<group>"; };
 		04F6D07229E4E6C500A341D0 /* LoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		04F6D07329E4E6C500A341D0 /* UserProfileView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
@@ -146,12 +156,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0461E9AE2A257E4200570E52 /* Extensions */ = {
+		0461E9AE2A257E4200570E52 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
 				0461E9AF2A257E8A00570E52 /* Toast+UIViewExtension.swift */,
+				04095D5C2A2989CF0045CFE0 /* Geohash.swift */,
 			);
-			path = Extensions;
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 		0461E9B32A257FD500570E52 /* ViewModels */ = {
@@ -168,6 +179,7 @@
 			isa = PBXGroup;
 			children = (
 				0468B23229E37EA30021E8C5 /* Persistence.swift */,
+				04095D5A2A293A5B0045CFE0 /* LocationManager.swift */,
 				04A7760A2A20257200B90696 /* Network Manager.swift */,
 				04F14F0B2A21138000111588 /* LocalFileManager.swift */,
 			);
@@ -180,7 +192,10 @@
 				0468B22B29E37EA20021E8C5 /* ContentView.swift */,
 				04D20BAE29F044B300490E87 /* EventsView.swift */,
 				04D20BB029F044DE00490E87 /* FavouriteEventsView.swift */,
+				04F12B9B2A2D3F1A004295BD /* CountdownTimerView.swift */,
 				04B8622B2A19A23E00711B49 /* FavouritesDetailedView.swift */,
+				04F12B9D2A2D8F9B004295BD /* BarChartView.swift */,
+				04F12B9F2A2EA651004295BD /* TrackableOffsetScrollView.swift */,
 				04D20BB229F044EE00490E87 /* SavedEventsView.swift */,
 				04FCEC5029F1AFF100D8A058 /* EventView.swift */,
 			);
@@ -224,7 +239,7 @@
 				0461E9B72A259E3000570E52 /* Views */,
 				0461E9B42A257FF600570E52 /* Managers */,
 				0461E9B32A257FD500570E52 /* ViewModels */,
-				0461E9AE2A257E4200570E52 /* Extensions */,
+				0461E9AE2A257E4200570E52 /* Utilities */,
 				04F6D07129E4E6C500A341D0 /* Auth */,
 				0468B22929E37EA20021E8C5 /* FunSeekerApp.swift */,
 				0468B22D29E37EA30021E8C5 /* Assets.xcassets */,
@@ -443,7 +458,10 @@
 				04F6D07A29E4E6C500A341D0 /* AuthenticatedView.swift in Sources */,
 				0461E9B02A257E8A00570E52 /* Toast+UIViewExtension.swift in Sources */,
 				04F14F0C2A21138000111588 /* LocalFileManager.swift in Sources */,
+				04095D5B2A293A5B0045CFE0 /* LocationManager.swift in Sources */,
 				0468B22C29E37EA20021E8C5 /* ContentView.swift in Sources */,
+				04095D5D2A2989CF0045CFE0 /* Geohash.swift in Sources */,
+				04F12B9C2A2D3F1A004295BD /* CountdownTimerView.swift in Sources */,
 				04F6D07929E4E6C500A341D0 /* UserProfileView.swift in Sources */,
 				04F6D07C29E4E6C500A341D0 /* SignupView.swift in Sources */,
 				04B8622C2A19A23E00711B49 /* FavouritesDetailedView.swift in Sources */,
@@ -453,6 +471,8 @@
 				04F6D07B29E4E6C500A341D0 /* AuthenticationView.swift in Sources */,
 				04F6D07829E4E6C500A341D0 /* LoginView.swift in Sources */,
 				04A7760B2A20257200B90696 /* Network Manager.swift in Sources */,
+				04F12B9E2A2D8F9B004295BD /* BarChartView.swift in Sources */,
+				04F12BA02A2EA651004295BD /* TrackableOffsetScrollView.swift in Sources */,
 				0468B22A29E37EA20021E8C5 /* FunSeekerApp.swift in Sources */,
 				04D20BAF29F044B300490E87 /* EventsView.swift in Sources */,
 				04FCEC5929F217AB00D8A058 /* SavedEventsViewModel.swift in Sources */,
@@ -623,6 +643,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FunSeeker/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Application needs permission to access your location to display the events closest to you.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Application needs permission to access photo gallery.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -653,6 +675,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FunSeeker/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Application needs permission to access your location to display the events closest to you.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Application needs permission to access photo gallery.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

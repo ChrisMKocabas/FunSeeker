@@ -49,12 +49,16 @@ struct EventView: View {
   var body: some View {
 
     ScrollView{
-        AsyncImage(url:URL(string: item[0].images[0].url.replacingOccurrences(of: "http://", with: "https://"))) { phase in
+
+      AsyncImage(url:URL(string: item[0].images.filter({ xImage in
+        xImage.width >= 1000
+      }).first?.url.replacingOccurrences(of: "http://", with: "https://") ?? "...")) { phase in
           switch phase {
           case .empty:
             ProgressView()
-              .aspectRatio(contentMode: .fit)
+              .aspectRatio(contentMode: .fill)
               .frame(maxWidth: .infinity,maxHeight: 220)
+              .clipShape(RoundedRectangle(cornerRadius: 20))
             
           case .success(let image):
             image
@@ -66,8 +70,9 @@ struct EventView: View {
           case .failure(_):
             Image("banner")
               .resizable()
-              .aspectRatio(contentMode: .fit)
+              .aspectRatio(contentMode: .fill)
               .frame(maxWidth: .infinity,maxHeight: 220)
+              .clipShape(RoundedRectangle(cornerRadius: 20))
           @unknown default:
             EmptyView()
           }
@@ -111,11 +116,17 @@ struct EventView: View {
             VStack {
               Text("Additional info:").fontWeight(.bold)
               if ((item.first?.info) != nil) {Text("Tap to expand").foregroundColor(Color.gray)}
-              Text(item.first?.info ?? "").lineLimit((item.first?.info?.count ?? 30)/30,reservesSpace: true)
+
+              Text("Price Intel: ").fontWeight(.bold)
+              BarChartView(min: item[0].priceRanges?[0].min ?? 0, max: item[0].priceRanges?[0].max ?? 0)
+
+              Text("Special considerations:").fontWeight(.bold)
+              Text(item.first?.info ?? "").lineLimit((item.first?.info?.count ?? 25)/25,reservesSpace: true)
               HStack{
                 Text((item[0].innerembedded?.venues[0].ada?.adaPhones ?? "").replacingOccurrences(of: "Ticketmaster:", with: "Contact:")).lineLimit(3,reservesSpace: true)
                 Spacer()
               }
+
               
             }
             .background(GeometryReader {

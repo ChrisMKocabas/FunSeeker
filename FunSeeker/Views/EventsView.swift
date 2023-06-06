@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 struct EventsView: View {
 
   @ObservedObject var eventViewModel: EventViewModel
@@ -18,7 +17,11 @@ struct EventsView: View {
   @State private var toolbarVisibility : Visibility = .hidden
   @ObservedObject var networkManager:NetworkManager
   @ObservedObject var localFileManager: LocalFileManager
-  
+  @State private var isEditing = false
+  @State var showToTopBtn = false
+  @Namespace var topID
+  @Namespace var bottomID
+  @State private var scrollPosition: CGPoint = .zero
 
   let backgroundGradient = LinearGradient(
       colors: [Color.pink, Color.yellow],
@@ -30,48 +33,154 @@ struct EventsView: View {
 //    GridItem(.flexible(), spacing: 2,alignment: nil)
 
   ]
+  var minValue: Double = 10
+  var maxValue: Double = 1000
+
+  @State private var selectedSegmentIndex = 3
+
+   var sortby: String{
+       switch selectedSegmentIndex {
+       case 0:
+         return "&sort=date"
+       case 1:
+         return "&sort=distance"
+       case 2:
+           return "&sort=onSaleStartDate"
+       case 3:
+         return ""
+       default:
+           return ""
+       }
+   }
 
   var body: some View {
     VStack{
       ZStack {
         backgroundGradient.ignoresSafeArea()
         if (networkManager.isActive == true) {
-          ScrollView(showsIndicators: false){
-            LazyVGrid(columns:columns) {
-              ForEach(eventViewModel.events, id:\.self.id) {item in
-                ExtractedView(item:item)
-                  .frame(maxWidth: .infinity,idealHeight: 400, maxHeight: 600)
-                  .onAppear(perform:{
-                    if eventViewModel.shouldLoadMoreData(id: item.id){
+          ScrollViewReader { proxy in
+
+            ZStack(alignment: .bottom){
+              ScrollView(showsIndicators: false){
+                VStack{
+                  Text("\(eventViewModel.radius,specifier:"Maximum distance %.f km")").foregroundColor(.black).fontWeight(.bold)
+                  Slider(
+                    value:                              $eventViewModel.radius,
+                    in: minValue...maxValue,
+                    step: 1
+                  ) {
+                    Text("Radius")
+                  } minimumValueLabel: {
+                    Text("\(minValue,specifier: "%.f km")")
+                  } maximumValueLabel: {
+                    Text("\(maxValue,specifier: "%.f km")")
+                  }.padding()
+                    .onChange(of: eventViewModel.radius, perform: { newValue in
                       Task{
-                        await eventViewModel.fetchMoreEvents()
+                        if networkManager.isActive {
+                          await eventViewModel.getData()
+                          localFileManager.loadOfflineEvents(eventType: .mainfeed)
+                        }
+                      }
+                    })
+                  Text("Sort events by \(sortby.replacingOccurrences(of: "&sort=", with: "").replacingOccurrences(of: "onSaleStartDate", with: "start of ticket sales "))").foregroundColor(.black).fontWeight(.bold)
+
+                  Picker("Sortby", selection: $selectedSegmentIndex) {
+                    Text("Date").tag(0)
+                    Text("Distance").tag(1)
+                    Text("Goes Live").tag(2)
+                    Text("None").tag(3)
+                  }
+                  .pickerStyle(.segmented)
+                  .onChange(of: sortby, perform: { newValue in
+                    Task{
+                      eventViewModel.sortby = newValue
+                      eventViewModel.ascdesc = (newValue == "" ?  "" : ",asc")
+                      if networkManager.isActive {
+                        await eventViewModel.getData()
+                        localFileManager.loadOfflineEvents(eventType: .mainfeed)
                       }
                     }
                   })
-              } .overlay(
-                RoundedRectangle(cornerRadius: 30)
-                  .stroke(Color.white, lineWidth:1)
-              )
-              .padding(10)
-            }
 
-          }.refreshable {
-            print("Hello world")
-          }
-          .onAppear(){
-            Task{
-              if eventViewModel.events.isEmpty && networkManager.isActive {
-                await eventViewModel.getData()
-                localFileManager.loadOfflineEvents(eventType: .mainfeed)
+                }.padding(.top)
+                  .background(Color.pink.opacity(0.2))
+                  .background(Color.white.opacity(0.7))
+                  .cornerRadius(30, corners: .allCorners)
+                  .padding(.horizontal,8)
+                  .id(topID)
+
+
+                LazyVGrid(columns:columns) {
+                  GeometryReader{geo in}
+                  ForEach(eventViewModel.events, id:\.self.id) {item in
+
+                    ExtractedView(item:item)
+                      .frame(maxWidth: .infinity, minHeight:350, maxHeight: 700)
+                      .onAppear(perform:{
+                        if eventViewModel.shouldLoadMoreData(id: item.id){
+                          Task{
+                            await eventViewModel.fetchMoreEvents()
+                          }
+                        }
+
+                      })
+
+                  } .overlay(
+                    RoundedRectangle(cornerRadius: 30)
+                      .stroke(Color.white, lineWidth:1)
+                  )
+                  .padding(10)
+                }//create a hidden geometry reader background to track scroll position
+                .background(GeometryReader { geometry in
+                  Color.clear
+                      .preference(key: ScrollOffsetPreferenceKey.self, value: geometry.frame(in: .named("scroll")).origin)
+              })//read geometry reader value using pref key
+                .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
+                  //keep track of position
+                  self.scrollPosition = value
+               //toggle TO THE TOP button based on coordinates
+                  showToTopBtn = value.y <= -300 ? true : false
+
               }
 
+
+              }
+              .refreshable {
+                Task{
+                  if networkManager.isActive {
+                    await eventViewModel.getData()
+                    localFileManager.loadOfflineEvents(eventType: .mainfeed)
+                  }
+                }
+              }
+              .onAppear(){
+                Task{
+                  if eventViewModel.events.isEmpty && networkManager.isActive {
+                    await eventViewModel.getData()
+                    localFileManager.loadOfflineEvents(eventType: .mainfeed)
+                  }
+
+                }
+              }
+              .onChange(of: eventViewModel.events) { newValue in
+                Task {
+                  localFileManager.saveEventFeed(events: newValue)
+                  localFileManager.loadOfflineEvents(eventType: .mainfeed)
+                }
+              }
+              if (showToTopBtn == true){
+                Button("Back to the top") {
+                  withAnimation {
+                    proxy.scrollTo(topID)
+                  }
+                }.buttonStyle(GrowingButton())
+                  .id(bottomID)
+                  .padding()
+              }
             }
-          }
-          .onChange(of: eventViewModel.events) { newValue in
-            Task {
-              localFileManager.saveEventFeed(events: newValue)
-              localFileManager.loadOfflineEvents(eventType: .mainfeed)
-            }
+
+
           }
 
         } else {
@@ -82,7 +191,7 @@ struct EventsView: View {
               Text("No internet connection.")
               ForEach(localFileManager.offlineEvents, id:\.self.id) {item in
                 ExtractedView(item:item)
-                  .frame(maxWidth: .infinity,idealHeight: 400, maxHeight: 600)
+                  .frame(maxWidth: .infinity, minHeight:350, maxHeight: 700)
               } .overlay(
                 RoundedRectangle(cornerRadius: 30)
                   .stroke(Color.white, lineWidth:1)
@@ -93,6 +202,7 @@ struct EventsView: View {
 
           }
         }
+
       }
       .searchable(text: $searchText,placement: .navigationBarDrawer(displayMode: .always), prompt: "Looking for an event?") {
         ZStack{
@@ -126,6 +236,7 @@ struct EventsView: View {
           }
         }
 
+
       
 
    }.navigationDestination(for: Event.self, destination: { item in
@@ -142,7 +253,7 @@ struct EventsView_Previews: PreviewProvider {
   static var previews: some View {
     NavigationStack{
       EventsView(eventViewModel: EventViewModel(),savedEventsViewModel: SavedEventsViewModel(), favouritesViewModel: FavouritesViewModel()
-                 ,networkManager: NetworkManager(), localFileManager: LocalFileManager())
+                 ,networkManager: NetworkManager(), localFileManager: LocalFileManager()).environmentObject(LocationManager())
     }
     
   }
@@ -162,33 +273,44 @@ public extension Color {
 struct ExtractedView: View {
 
   let item: Event
+
   var body: some View {
     NavigationLink(value: item) {
       VStack{
+        ZStack(alignment: .bottomTrailing){
+          AsyncImage(url:URL(string: item.images.filter({ xImage in
+            xImage.width >= 1000
+          }).first!.url.replacingOccurrences(of: "http://", with: "https://"))) { phase in
+            switch phase {
+            case .empty:
+              ProgressView()
+                .aspectRatio(contentMode: .fit)
+                .frame(maxWidth: .infinity,maxHeight: 250)
+                .clipShape(RoundedRectangle(cornerRadius: 30))
+            case .success(let image):
+              image
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(maxWidth: .infinity, maxHeight: 200)
+                .clipShape(RoundedRectangle(cornerRadius: 30))
 
-        AsyncImage(url:URL(string: item.images[0].url.replacingOccurrences(of: "http://", with: "https://"))) { phase in
-          switch phase {
-          case .empty:
-            ProgressView()
-              .aspectRatio(contentMode: .fit)
-              .frame(maxWidth: .infinity,maxHeight: 250)
-              .clipShape(RoundedRectangle(cornerRadius: 30))
-          case .success(let image):
-            image
-              .resizable()
-              .aspectRatio(contentMode: .fill)
-              .frame(maxWidth: .infinity, maxHeight: 200)
-              .clipShape(RoundedRectangle(cornerRadius: 30))
-
-          case .failure(_):
-            Image("banner")
-              .resizable()
-              .aspectRatio(contentMode: .fit)
-              .frame(maxWidth: .infinity,maxHeight: 250)
-              .clipShape(RoundedRectangle(cornerRadius: 30))
-          @unknown default:
-            EmptyView()
+            case .failure(_):
+              Image("banner")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(maxWidth: .infinity,maxHeight: 250)
+                .clipShape(RoundedRectangle(cornerRadius: 30))
+            @unknown default:
+              EmptyView()
+            }
           }
+          HStack{
+            Text("Starts in: ").foregroundColor(Color.black) .font(.system(size: 16, weight: .light, design: .rounded))
+            CountDownTimerView(referenceDate:ISO8601DateFormatter().date(from: item.dates.start.dateTime ?? "2023-06-12T22:30:00Z")!).foregroundColor(.black)
+          }.padding(.horizontal,10)
+            .padding(.vertical,5)
+            .background(Color.white.opacity(0.8))
+            .cornerRadius(10, corners: .allCorners)
         }.overlay(
           RoundedRectangle(cornerRadius: 30)
             .stroke(Color.white, lineWidth:2)
@@ -203,7 +325,7 @@ struct ExtractedView: View {
           }
           HStack{
             Text("Date: ").fontWeight(.bold)
-            Text(item.dates.start.localDate)
+            Text("\(item.dates.start.localDate) \(String(item.dates.start.localTime?.prefix(upTo: String.Index(utf16Offset: 5, in: item.dates.start.localTime!)) ?? ""))")
             Spacer()
           }
           if((item.priceRanges?[0].min) != nil && (item.priceRanges?[0].min) != 0){
@@ -215,15 +337,42 @@ struct ExtractedView: View {
               Spacer()
             }
           }
+          if (item.innerembedded?.venues[0].distances != nil){
+            HStack{
+              Text("Distance: ").fontWeight(.bold)
+              Text("\(Int(item.innerembedded?.venues[0].distances ?? 0.0)) km")
+              Spacer()
+            }
+          }
             
         }.foregroundColor(Color.black)
           .padding()
-        
-        Spacer()
+          Spacer()
       }.background(Color.white.opacity(0.5))
         .cornerRadius(30, corners: .allCorners)
 
     }
 
   }
+}
+
+
+struct GrowingButton: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding()
+            .background(.blue.opacity(0.8))
+            .foregroundColor(.white)
+            .clipShape(Capsule())
+            .scaleEffect(configuration.isPressed ? 1.2 : 1)
+            .animation(.easeOut(duration: 0.2), value: configuration.isPressed)
+    }
+}
+
+
+struct ScrollOffsetPreferenceKey: PreferenceKey {
+    static var defaultValue: CGPoint = .zero
+
+    static func reduce(value: inout CGPoint, nextValue: () -> CGPoint) {
+    }
 }

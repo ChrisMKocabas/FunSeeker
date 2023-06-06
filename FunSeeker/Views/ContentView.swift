@@ -17,6 +17,7 @@ struct ContentView: View {
   
   @StateObject var networkManager = NetworkManager()
   @StateObject var localFileManager = LocalFileManager()
+  
 
   @FetchRequest(
     sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],

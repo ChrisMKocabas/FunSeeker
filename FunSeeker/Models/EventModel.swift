@@ -233,6 +233,7 @@ struct Venue: Codable {
     let test: Bool?
     let url: String?
     let locale: String
+    let distances: Double?
     let images: [xImage]?
     let postalCode: String?
     let timezone: String
@@ -255,6 +256,7 @@ struct Venue: Codable {
     enum CodingKeys: String, CodingKey {
         case name, type, id, test, url, locale, images, postalCode, timezone, city, state, country, address, location, markets, dmas, social, boxOfficeInfo, parkingDetail, accessibleSeatingDetail, generalInfo, upcomingEvents
         case links = "_links"
+        case distances = "distance"
         case ada, aliases
     }
 }
