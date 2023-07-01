@@ -1,7 +1,15 @@
-
 # FunSeeker
 
-FunSeeker is a social networking app that allows users to connect with friends, discover fun activities, and share their experiences. With FunSeeker, users can create an account, log in, explore nearby events, and interact with other users (TBI).
+FunSeeker is an iOS app that helps users discover and participate in exciting events happening around them such as music concerts, sports matches, art exhibitions, theater shows, or other fun activities. With FunSeeker, users can:
+- Create an account
+- Log in
+- Personalize their profile
+- Change their email or password anything
+- Reset their password
+- Explore a wide range of nearby events
+- Save their favourite events
+- Add artists or specific event types to favourites
+- Use the app in offline mode in case they have no internet access
 
 Video demo: https://drive.google.com/file/d/1T0MfBMUjuLY7nXVO30KY9gPDJTQp1vIP/view?pli=1
 
