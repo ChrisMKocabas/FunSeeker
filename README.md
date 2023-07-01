@@ -114,10 +114,10 @@ One of the key features of FunSeeker is the ability to discover and participate 
 
 10. **Interactive Map View**: FunSeeker provides an interactive map view that allows you to visualize events based on their location. You can explore events on the map, see their proximity to your current location, and plan your event itinerary accordingly.
 
-11. **Social Interaction**: FunSeeker facilitates social interaction among event participants. You can connect with other attendees, share your experiences, and discuss the events through built-in social features such as event chat rooms or comments sections.
+11. **Social Interaction**: Planned feature.
 
-12. **Event Creation and Participation**: FunSeeker allows event organizers to create and promote their events on the platform. As a user, you can participate in events by purchasing tickets, RSVPing, or taking other relevant actions based on the event's requirements.
-
+12. **Event Creation and Participation**: Planned feature.
+    
 These features make the Events section of FunSeeker a comprehensive and immersive platform for discovering, exploring, and engaging with various events. Whether you are a music enthusiast, sports fan, art lover, or simply looking for exciting experiences, FunSeeker's Events section has something for everyone.
 
 ### Technology Stack
