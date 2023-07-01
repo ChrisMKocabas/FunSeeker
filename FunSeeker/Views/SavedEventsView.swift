@@ -10,22 +10,29 @@ import Firebase
 import FirebaseAuth
 
 struct SavedEventsView: View {
+
+  // Core Data managed object context
   @Environment(\.managedObjectContext) private var viewContext
+
+  // View models
   @ObservedObject var eventViewModel: EventViewModel
   @ObservedObject var savedEventsViewModel: SavedEventsViewModel
-  
+
+  // Fetch request to retrieve saved items from Core Data
   @FetchRequest(
     sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
     animation: .default)
   private var items: FetchedResults<Item>
-  
+
+  // State and variables for filtering
   @State private var filtering = false
   @State private var filteredEvents = [Event]()
 
+  // Background gradient for the view
   let backgroundGradient = LinearGradient(
-      colors: [Color.pink, Color.yellow],
-      startPoint: .top, endPoint: .bottom)
-  
+    colors: [Color.pink, Color.yellow],
+    startPoint: .top, endPoint: .bottom)
+
   var body: some View {
 
       VStack {
@@ -40,6 +47,7 @@ struct SavedEventsView: View {
                 NavigationLink(value: item) {
                   HStack(alignment: .center, spacing: 10){
                     AsyncImage(url:URL(string: item.images[0].url.replacingOccurrences(of: "http://", with: "https://"))) { phase in
+                      // Handle different phases of loading the image
                       switch phase {
                       case .empty:
                         ProgressView()
@@ -77,7 +85,7 @@ struct SavedEventsView: View {
                   .fontWeight(.bold)
                   .font(.system(size: 20, weight: .semibold, design: .rounded))
                   .multilineTextAlignment(.center)
-                  
+                  // Add any additional formatting or properties to the header text here
 
             }.frame(maxWidth: .infinity, maxHeight: 400)
               .listRowBackground(
@@ -85,7 +93,7 @@ struct SavedEventsView: View {
                       .fill(Color(white: 1, opacity: 0.5))
                       .padding(.vertical, 2).padding(.horizontal, 10))
                 .background(Color.random().opacity(0.2).blur(radius: 30))
-             
+
             }.onDelete { IndexSet in
               deleteItems(offsets: IndexSet)
             }   .padding(.vertical)
@@ -94,7 +102,6 @@ struct SavedEventsView: View {
 
           }.scrollContentBackground(.hidden)
           .background(backgroundGradient.edgesIgnoringSafeArea(.all))
-
           .navigationDestination(for: Event.self, destination: { item in
             EventView(eventViewModel:eventViewModel, savedEventsViewModel: savedEventsViewModel, favouritesViewModel: FavouritesViewModel(), item:[item])
           })
@@ -118,23 +125,23 @@ struct SavedEventsView: View {
       }
     }
     .toolbarBackground(Color(red: 1, green: 0.3157, blue: 0.3333), for: .navigationBar)
-    
-    
+
+
   }
-  
+  // Delete selected items
   private func deleteItems(offsets: IndexSet) {
     withAnimation {
 
       let sortedIndexes = Array(offsets).sorted()
-      
+
       var event: Event?
-      
+
       // Remove each item at the selected indexes from the userPhotos array
       for index in sortedIndexes.reversed() {
         event = savedEventsViewModel.userEvents.remove(at: index)
       }
       print("\(event!.id)")
-      
+
       let user = Auth.auth().currentUser
       let db = Firestore.firestore()
       let docRef = db.collection("users").document(user!.uid).collection("events").document("\(event!.id)")
@@ -146,16 +153,9 @@ struct SavedEventsView: View {
         }
       }
     }
-    
+
   }
 }
-
-//private let itemFormatter: DateFormatter = {
-//  let formatter = DateFormatter()
-//  formatter.dateStyle = .short
-//  formatter.timeStyle = .medium
-//  return formatter
-//}()
 
 
 struct SavedEventsView_Previews: PreviewProvider {

@@ -1,8 +1,8 @@
 //
-//  UserProfileView.swift
-//  MarsExplorer
+//  FunSeekerApp.swift
+//  FunSeeker
 //
-//  Created by Muhammed Kocabas on 2023-03-02.
+//  Created by Chris Kocabas on 2023-04-09.
 //
 
 import SwiftUI

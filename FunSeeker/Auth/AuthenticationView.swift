@@ -1,8 +1,8 @@
 //
-//  AuthenticationView.swift
-//  MarsExplorer
+//  FunSeekerApp.swift
+//  FunSeeker
 //
-//  Created by Muhammed Kocabas on 2023-03-02.
+//  Created by Chris Kocabas on 2023-04-09.
 //
 
 import SwiftUI
@@ -12,17 +12,18 @@ import FirebaseCore
 import FirebaseAnalyticsSwift
 import FirebaseAuth
 
+// A view responsible for handling authentication
 struct AuthenticationView: View {
-  @EnvironmentObject var viewModel: AuthenticationViewModel
+  @EnvironmentObject var viewModel: AuthenticationViewModel // The view model used for authentication
 
   var body: some View {
     VStack {
       switch viewModel.flow {
-      case .login:
-        LoginView()
+      case .login: // If the flow is set to login
+        LoginView() // Show the login view
           .environmentObject(viewModel)
-      case .signUp:
-        SignupView()
+      case .signUp: // If the flow is set to sign up
+        SignupView() // Show the signup view
           .environmentObject(viewModel)
       }
     }
@@ -32,7 +33,6 @@ struct AuthenticationView: View {
 struct AuthenticationView_Previews: PreviewProvider {
   static var previews: some View {
     AuthenticationView()
-      .environmentObject(AuthenticationViewModel())
+      .environmentObject(AuthenticationViewModel()) // Create a preview instance of AuthenticationView with a new AuthenticationViewModel as the environment object
   }
 }
-

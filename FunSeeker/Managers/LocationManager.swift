@@ -14,79 +14,95 @@ class LocationManager : NSObject, ObservableObject, CLLocationManagerDelegate {
 
   static let shared = LocationManager()
 
+  // Published properties for observing changes in authorization status and location coordinates
   @Published var authorizationStatus: CLAuthorizationStatus?
   @Published var latitude: Double = 0
   @Published var longitude: Double = 0
 
+  // CLLocationManager instance for managing location-related operations
   var locationManager: CLLocationManager
 
+  override init() {
+    locationManager = CLLocationManager()
 
-   override init() {
-     locationManager = CLLocationManager()
+    super.init()
 
-     super.init()
-     locationManager.delegate = self
-     locationManager.desiredAccuracy = kCLLocationAccuracyBest
-     locationManager.distanceFilter = 10
-     locationManager.startMonitoringSignificantLocationChanges()
+    // Set the delegate to self and configure desired accuracy and distance filter
+    locationManager.delegate = self
+    locationManager.desiredAccuracy = kCLLocationAccuracyBest
+    locationManager.distanceFilter = 10
 
-   }
+    // Start monitoring significant location changes
+    locationManager.startMonitoringSignificantLocationChanges()
+  }
+
+  // MARK: - CLLocationManagerDelegate methods
 
   func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-      switch manager.authorizationStatus {
-      case .authorizedWhenInUse:  // Location services are available.
-          // Insert code here of what should happen when Location services are authorized
-          authorizationStatus = .authorizedWhenInUse
-          locationManager.requestLocation()
-        DispatchQueue.main.async {
-          self.latitude = self.locationManager.location?.coordinate.latitude ?? 0
-          self.longitude = self.locationManager.location?.coordinate.longitude ?? 0
-          print("Hey biseyler oluyor")
-        }
-          break
+    // Handle changes in location authorization status
+    switch manager.authorizationStatus {
+    case .authorizedWhenInUse:
+      // Location services are available and authorized when in use
 
-      case .restricted:  // Location services currently unavailable.
-          // Insert code here of what should happen when Location services are NOT authorized
-          authorizationStatus = .restricted
-          break
+      // Update the authorization status property
+      authorizationStatus = .authorizedWhenInUse
 
-      case .denied:  // Location services currently unavailable.
-          // Insert code here of what should happen when Location services are NOT authorized
-          authorizationStatus = .denied
-          break
+      // Request the current location
+      locationManager.requestLocation()
 
-      case .notDetermined:        // Authorization not determined yet.
-          authorizationStatus = .notDetermined
-          manager.requestWhenInUseAuthorization()
-          break
-
-      default:
-          break
+      // Update the latitude and longitude properties on the main queue
+      DispatchQueue.main.async {
+        self.latitude = self.locationManager.location?.coordinate.latitude ?? 0
+        self.longitude = self.locationManager.location?.coordinate.longitude ?? 0
+        print("Hey, something is happening")
       }
+
+    case .restricted:
+      // Location services are restricted
+
+      // Update the authorization status property
+      authorizationStatus = .restricted
+
+    case .denied:
+      // Location services are denied by the user
+
+      // Update the authorization status property
+      authorizationStatus = .denied
+
+    case .notDetermined:
+      // Authorization not determined yet
+
+      // Update the authorization status property
+      authorizationStatus = .notDetermined
+
+      // Request location authorization when in use
+      manager.requestWhenInUseAuthorization()
+
+    default:
+      break
+    }
   }
 
   func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-  // Insert code to handle location updates
-//    print("Your current location is:")
-//    print("Latitude: \(locationManager.location?.coordinate.latitude.description ?? "Error loading")")
-//    print("Longitude: \(locationManager.location?.coordinate.longitude.description ?? "Error loading")")
-//
+    // Handle location updates
 
-    guard let lat = locations.last?.coordinate.latitude, let lon = locations.last?.coordinate.longitude else {return}
+    // Retrieve the latest location coordinates
+    guard let lat = locations.last?.coordinate.latitude, let lon = locations.last?.coordinate.longitude else { return }
 
-      DispatchQueue.main.async {
-        self.latitude = lat
-        self.longitude = lon
-      }
+    // Update the latitude and longitude properties on the main queue
+    DispatchQueue.main.async {
+      self.latitude = lat
+      self.longitude = lon
+    }
 
-    
+    // Print the updated location coordinates
     print("Your current updated location is:")
     print("Latitude: \(String(describing: self.latitude))")
     print("Longitude: \(String(describing: self.longitude))")
   }
 
   func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-  print("error: \(error.localizedDescription)")
+    // Handle location manager errors
+    print("Error: \(error.localizedDescription)")
   }
-
 }

@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		04095D5B2A293A5B0045CFE0 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04095D5A2A293A5B0045CFE0 /* LocationManager.swift */; };
 		04095D5D2A2989CF0045CFE0 /* Geohash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04095D5C2A2989CF0045CFE0 /* Geohash.swift */; };
+		0422814B2A50968500B903F2 /* RandomColor+ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0422814A2A50968500B903F2 /* RandomColor+ColorExtension.swift */; };
+		0422814F2A50A17900B903F2 /* RoundedCorner+ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0422814E2A50A17900B903F2 /* RoundedCorner+ViewExtension.swift */; };
 		0461E9B02A257E8A00570E52 /* Toast+UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0461E9AF2A257E8A00570E52 /* Toast+UIViewExtension.swift */; };
 		0461E9B22A257EEB00570E52 /* EventViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0461E9B12A257EEB00570E52 /* EventViewModel.swift */; };
 		0461E9B62A2580F700570E52 /* FavouritesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0461E9B52A2580F700570E52 /* FavouritesViewModel.swift */; };
@@ -78,6 +80,8 @@
 /* Begin PBXFileReference section */
 		04095D5A2A293A5B0045CFE0 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		04095D5C2A2989CF0045CFE0 /* Geohash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Geohash.swift; sourceTree = "<group>"; };
+		0422814A2A50968500B903F2 /* RandomColor+ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RandomColor+ColorExtension.swift"; sourceTree = "<group>"; };
+		0422814E2A50A17900B903F2 /* RoundedCorner+ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RoundedCorner+ViewExtension.swift"; sourceTree = "<group>"; };
 		0461E9AF2A257E8A00570E52 /* Toast+UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Toast+UIViewExtension.swift"; sourceTree = "<group>"; };
 		0461E9B12A257EEB00570E52 /* EventViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewModel.swift; sourceTree = "<group>"; };
 		0461E9B52A2580F700570E52 /* FavouritesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesViewModel.swift; sourceTree = "<group>"; };
@@ -161,6 +165,8 @@
 			children = (
 				0461E9AF2A257E8A00570E52 /* Toast+UIViewExtension.swift */,
 				04095D5C2A2989CF0045CFE0 /* Geohash.swift */,
+				0422814A2A50968500B903F2 /* RandomColor+ColorExtension.swift */,
+				0422814E2A50A17900B903F2 /* RoundedCorner+ViewExtension.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -459,6 +465,7 @@
 				0461E9B02A257E8A00570E52 /* Toast+UIViewExtension.swift in Sources */,
 				04F14F0C2A21138000111588 /* LocalFileManager.swift in Sources */,
 				04095D5B2A293A5B0045CFE0 /* LocationManager.swift in Sources */,
+				0422814B2A50968500B903F2 /* RandomColor+ColorExtension.swift in Sources */,
 				0468B22C29E37EA20021E8C5 /* ContentView.swift in Sources */,
 				04095D5D2A2989CF0045CFE0 /* Geohash.swift in Sources */,
 				04F12B9C2A2D3F1A004295BD /* CountdownTimerView.swift in Sources */,
@@ -474,6 +481,7 @@
 				04F12B9E2A2D8F9B004295BD /* BarChartView.swift in Sources */,
 				04F12BA02A2EA651004295BD /* TrackableOffsetScrollView.swift in Sources */,
 				0468B22A29E37EA20021E8C5 /* FunSeekerApp.swift in Sources */,
+				0422814F2A50A17900B903F2 /* RoundedCorner+ViewExtension.swift in Sources */,
 				04D20BAF29F044B300490E87 /* EventsView.swift in Sources */,
 				04FCEC5929F217AB00D8A058 /* SavedEventsViewModel.swift in Sources */,
 			);
