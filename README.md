@@ -2,14 +2,17 @@
 
 FunSeeker is an iOS app that helps users discover and participate in exciting events happening around them such as music concerts, sports matches, art exhibitions, theater shows, or other fun activities. With FunSeeker, users can:
 - Create an account
-- Log in
+- Log in/out
 - Personalize their profile
-- Change their email or password anything
+- Change their email or password
 - Reset their password
 - Explore a wide range of nearby events
-- Save their favourite events
-- Add artists or specific event types to favourites
-- Use the app in offline mode in case they have no internet access
+- View exact venues of map
+- Access detailed information on events and a visually pleasing price insights
+- Choose to be redirected to purchase tickets directly using Ticketmaster API
+- Save any event they want to
+- Add artists or specific events types to favourites to and stay in the loop 
+- Use the app in limited offline mode in case they have no internet access
 
 Video demo: https://drive.google.com/file/d/1T0MfBMUjuLY7nXVO30KY9gPDJTQp1vIP/view?pli=1
 
