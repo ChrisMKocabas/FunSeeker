@@ -146,7 +146,7 @@ FunSeeker is built using a modern tech stack, incorporating the following techno
 
 ## Contributing
 
-We welcome contributions to the FunSeeker app. To contribute, follow these steps:
+I welcome contributions to the FunSeeker app. To contribute, follow these steps:
 
 1. Fork the repository.
 2. Create a new branch for your feature or bug fix.
